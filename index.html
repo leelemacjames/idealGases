@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideal Gases — Interactive Lesson</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #30363d;
+    --gold: #e6a817;
+    --gold-dim: #a07510;
+    --teal: #39d0c0;
+    --teal-dim: #1a6b63;
+    --red: #e05a5a;
+    --green: #3dba7a;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --teacher: #c084fc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+    color: var(--gold);
+  }
+
+  header h1 span {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .teacher-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .teacher-btn:hover { border-color: var(--teacher); color: var(--teacher); }
+  .teacher-btn.active { border-color: var(--teacher); color: var(--teacher); background: rgba(192,132,252,0.08); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 6rem;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    padding: 1.1rem 1.6rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    background: rgba(230,168,23,0.1);
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--text);
+  }
+
+  .section-body {
+    padding: 1.5rem 1.6rem;
+    line-height: 1.8;
+    font-size: 0.97rem;
+    color: var(--text);
+  }
+
+  .section-body p { margin-bottom: 1rem; }
+  .section-body p:last-child { margin-bottom: 0; }
+
+  /* ── EQUATION BOX ── */
+  .eq-box {
+    background: var(--surface2);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.4rem;
+    margin: 1.2rem 0;
+    font-size: 1.05rem;
+    text-align: center;
+    color: var(--teal);
+  }
+
+  /* ── KEY CONCEPT ── */
+  .key-concept {
+    background: rgba(230,168,23,0.06);
+    border: 1px solid rgba(230,168,23,0.25);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .key-concept strong {
+    font-style: normal;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--gold-dim);
+  }
+
+  /* ── ASSUMPTIONS LIST ── */
+  .assumptions {
+    list-style: none;
+    margin: 0.8rem 0;
+  }
+  .assumptions li {
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.94rem;
+  }
+  .assumptions li:last-child { border-bottom: none; }
+  .assumptions li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--teal);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── Q&A BLOCK ── */
+  .qa-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 1.8rem;
+    overflow: hidden;
+  }
+
+  .qa-header {
+    background: rgba(57,208,192,0.07);
+    border-bottom: 1px solid var(--border);
+    padding: 0.7rem 1.2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .qa-q {
+    padding: 1.1rem 1.2rem 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Multiple choice */
+  .mc-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 1.2rem 1.1rem;
+  }
+
+  .mc-option {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .mc-option:hover:not(.locked) { border-color: var(--teal); background: rgba(57,208,192,0.05); }
+
+  .mc-opt-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    min-width: 1.2rem;
+    margin-top: 0.05rem;
+  }
+
+  .mc-option.correct { border-color: var(--green); background: rgba(61,186,122,0.1); }
+  .mc-option.wrong   { border-color: var(--red);   background: rgba(224,90,90,0.1);  }
+  .mc-option.correct .mc-opt-label { color: var(--green); }
+  .mc-option.wrong   .mc-opt-label { color: var(--red);   }
+
+  /* Short answer */
+  .short-answer-wrap {
+    padding: 0 1.2rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .short-answer-wrap input,
+  .short-answer-wrap textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.92rem;
+    padding: 0.65rem 0.9rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  .short-answer-wrap input:focus,
+  .short-answer-wrap textarea:focus { border-color: var(--teal); }
+
+  .check-btn {
+    align-self: flex-start;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    background: var(--teal-dim);
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 4px;
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .check-btn:hover { background: rgba(57,208,192,0.2); }
+  .check-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .answer-reveal {
+    display: none;
+    background: rgba(61,186,122,0.08);
+    border: 1px solid rgba(61,186,122,0.3);
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+    color: var(--green);
+    line-height: 1.6;
+  }
+  .answer-reveal.show { display: block; }
+
+  .feedback-msg {
+    font-size: 0.82rem;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 0.3rem 0;
+  }
+  .feedback-msg.ok  { color: var(--green); }
+  .feedback-msg.err { color: var(--red);   }
+
+  /* ── OPEN QUESTION ── */
+  .open-q-block {
+    background: rgba(192,132,252,0.05);
+    border: 1px solid rgba(192,132,252,0.25);
+    border-radius: 8px;
+    margin-top: 1.8rem;
+    overflow: hidden;
+  }
+
+  .open-q-header {
+    background: rgba(192,132,252,0.1);
+    border-bottom: 1px solid rgba(192,132,252,0.2);
+    padding: 0.7rem 1.2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teacher);
+    letter-spacing: 0.1em;
+  }
+
+  .open-q-body {
+    padding: 1.1rem 1.2rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .open-q-marks {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--teacher);
+    opacity: 0.7;
+    margin-bottom: 0.6rem;
+  }
+
+  .open-q-textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.92rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.2s;
+    margin-top: 0.8rem;
+  }
+  .open-q-textarea:focus { border-color: var(--teacher); }
+
+  /* teacher mark scheme */
+  .teacher-mark {
+    display: none;
+    margin-top: 1rem;
+    background: rgba(192,132,252,0.08);
+    border: 1px solid rgba(192,132,252,0.3);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+  .teacher-mark.show { display: block; }
+  .teacher-mark h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teacher);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+  }
+  .teacher-mark ul {
+    list-style: none;
+  }
+  .teacher-mark ul li {
+    padding: 0.25rem 0 0.25rem 1.3rem;
+    position: relative;
+    color: #d4b8ff;
+  }
+  .teacher-mark ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--teacher);
+    font-size: 0.8rem;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid rgba(192,132,252,0.4);
+    border-radius: 10px;
+    padding: 2rem;
+    width: 340px;
+    text-align: center;
+  }
+
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--teacher);
+    margin-bottom: 0.4rem;
+    font-size: 1.2rem;
+  }
+  .modal p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+  }
+  .modal input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    padding: 0.65rem 1rem;
+    text-align: center;
+    letter-spacing: 0.15em;
+    outline: none;
+    margin-bottom: 0.8rem;
+    transition: border-color 0.2s;
+  }
+  .modal input:focus { border-color: var(--teacher); }
+  .modal-btns { display: flex; gap: 0.6rem; }
+  .modal-btns button {
+    flex: 1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    padding: 0.6rem;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.18s;
+  }
+  .btn-cancel { background: transparent; border-color: var(--border); color: var(--muted); }
+  .btn-cancel:hover { border-color: var(--red); color: var(--red); }
+  .btn-enter  { background: rgba(192,132,252,0.15); border-color: var(--teacher); color: var(--teacher); }
+  .btn-enter:hover { background: rgba(192,132,252,0.3); }
+  .modal-error {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--red);
+    min-height: 1.1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  /* ── TEACHER BANNER ── */
+  .teacher-banner {
+    display: none;
+    background: rgba(192,132,252,0.1);
+    border-bottom: 1px solid rgba(192,132,252,0.25);
+    padding: 0.5rem 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teacher);
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+  .teacher-banner.show { display: block; }
+
+  /* ── SCORE STRIP ── */
+  .score-strip {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+  }
+  .score-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .score-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    color: var(--gold);
+  }
+  .reset-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.35rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- TEACHER PASSWORD MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>Teacher Mode</h2>
+    <p>Enter the access code to reveal mark schemes and open question guidance.</p>
+    <input type="password" id="pwd-input" placeholder="••••••" maxlength="20">
+    <div class="modal-error" id="pwd-error"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-enter" onclick="checkPassword()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <h1>Ideal Gases <span>— Unit G484 · 4.3.4</span></h1>
+  <button class="teacher-btn" id="teacher-toggle" onclick="openModal()">⚿ Teacher Mode</button>
+</header>
+
+<div class="teacher-banner" id="teacher-banner">
+  ⚿ TEACHER MODE ACTIVE — Mark schemes and open question guidance are visible
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="progress-label" id="prog-label">0 / 8 questions answered</div>
+</div>
+
+<main>
+
+  <!-- ════════════════ SECTION 1: BOYLE'S LAW ════════════════ -->
+  <div class="section-card" style="animation-delay:0.05s">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">Boyle's Law</span>
+    </div>
+    <div class="section-body">
+      <p>Discovered by Robert Boyle in 1662, this law relates the <strong>pressure</strong> and <strong>volume</strong> of a gas held at <em>constant temperature</em>.</p>
+
+      <div class="key-concept">
+        <strong>STATEMENT</strong>
+        The pressure of a fixed mass of gas at constant temperature is inversely proportional to its volume.
+      </div>
+
+      <div class="eq-box">
+        \( p \propto \dfrac{1}{V} \quad \Longrightarrow \quad pV = \text{constant} \quad \Longrightarrow \quad p_1 V_1 = p_2 V_2 \)
+      </div>
+
+      <p>Plotting \(p\) against \(V\) gives a <em>rectangular hyperbola</em>. Plotting \(p\) against \(1/V\) gives a straight line through the origin — the classic linearisation test. Each curve at a different temperature is called an <strong>isothermal</strong>.</p>
+
+      <!-- Q1 -->
+      <div class="qa-block">
+        <div class="qa-header">⬡ QUICK CHECK · Q1 · Multiple Choice</div>
+        <div class="qa-q">A gas is compressed at constant temperature from 3000 cm³ at 1.0 × 10⁵ Pa. What is the new volume at 2.5 × 10⁶ Pa?</div>
+        <div class="mc-options" id="mc1">
+          <div class="mc-option" onclick="checkMC(this, 'mc1', false)"><span class="mc-opt-label">A</span>120 cm³</div>
+          <div class="mc-option" onclick="checkMC(this, 'mc1', true)"><span class="mc-opt-label">B</span>120 cm³ — wait, let me recalculate: <em>p₁V₁/p₂ = (1.0×10⁵ × 3000)/(2.5×10⁶) = <strong>120 cm³</strong></em></div>
+          <div class="mc-option" onclick="checkMC(this, 'mc1', false)"><span class="mc-opt-label">C</span>7.5 × 10⁷ cm³</div>
+          <div class="mc-option" onclick="checkMC(this, 'mc1', false)"><span class="mc-opt-label">D</span>300 cm³</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SECTION 2: CHARLES' & PRESSURE LAW ════════════════ -->
+  <div class="section-card" style="animation-delay:0.1s">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Charles' Law &amp; the Pressure Law</span>
+    </div>
+    <div class="section-body">
+      <p><strong>Charles' Law</strong> holds pressure constant and relates volume to absolute temperature:</p>
+      <div class="eq-box">
+        \( V \propto T \quad \Longrightarrow \quad \dfrac{V}{T} = \text{const} \quad \Longrightarrow \quad \dfrac{V_1}{T_1} = \dfrac{V_2}{T_2} \)
+      </div>
+
+      <p><strong>The Pressure Law</strong> holds volume constant and relates pressure to absolute temperature:</p>
+      <div class="eq-box">
+        \( p \propto T \quad \Longrightarrow \quad \dfrac{p}{T} = \text{const} \quad \Longrightarrow \quad \dfrac{p_1}{T_1} = \dfrac{p_2}{T_2} \)
+      </div>
+
+      <div class="key-concept">
+        <strong>CRITICAL POINT</strong>
+        Temperature must always be in <strong>Kelvin</strong>: \(T(\text{K}) = T(°\text{C}) + 273\). Zero on the Celsius scale is not zero molecular motion.
+      </div>
+
+      <!-- Q2 -->
+      <div class="qa-block">
+        <div class="qa-header">⬡ QUICK CHECK · Q2 · Short Answer</div>
+        <div class="qa-q">A gas occupies volume \(V\) at 127 °C. What temperature (in °C) gives volume 2.75V at constant pressure?</div>
+        <div class="short-answer-wrap">
+          <input type="text" id="q2-in" placeholder="Your answer (in °C)">
+          <div class="feedback-msg" id="q2-fb"></div>
+          <button class="check-btn" onclick="checkNumeric('q2-in','q2-fb','q2-ans',1097,20,'q2-btn')" id="q2-btn">Check</button>
+          <div class="answer-reveal" id="q2-ans">
+            \(T_1 = 127 + 273 = 400\text{ K}\). Using \(V_1/T_1 = V_2/T_2\): \(T_2 = 400 \times 2.75 = 1100\text{ K} = 827°\text{C}\).
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SECTION 3: KINETIC THEORY ════════════════ -->
+  <div class="section-card" style="animation-delay:0.15s">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Kinetic Theory of Gases</span>
+    </div>
+    <div class="section-body">
+      <p>The gas laws describe <em>macroscopic</em> behaviour (p, V, T). Kinetic theory provides the <em>microscopic</em> picture — molecules in rapid random motion — and connects the two scales.</p>
+
+      <p><strong>Basic assumptions:</strong></p>
+      <ul class="assumptions">
+        <li>Large number of identical molecules in rapid, random motion.</li>
+        <li>Collisions between molecules and container walls are <strong>perfectly elastic</strong> (no kinetic energy lost).</li>
+        <li>Intermolecular forces are zero <em>except</em> during collisions.</li>
+        <li>Gravitational forces on molecules are negligible.</li>
+        <li>Total molecular volume is negligible compared to container volume.</li>
+      </ul>
+
+      <!-- Q3 -->
+      <div class="qa-block">
+        <div class="qa-header">⬡ QUICK CHECK · Q3 · Multiple Choice</div>
+        <div class="qa-q">Which assumption of kinetic theory ensures that the internal energy of an ideal gas is purely <em>kinetic</em>?</div>
+        <div class="mc-options" id="mc3">
+          <div class="mc-option" onclick="checkMC(this,'mc3',false)"><span class="mc-opt-label">A</span>Collisions with the wall are elastic.</div>
+          <div class="mc-option" onclick="checkMC(this,'mc3',true)"><span class="mc-opt-label">B</span>Intermolecular forces are zero except during collisions.</div>
+          <div class="mc-option" onclick="checkMC(this,'mc3',false)"><span class="mc-opt-label">C</span>Molecular volume is negligible.</div>
+          <div class="mc-option" onclick="checkMC(this,'mc3',false)"><span class="mc-opt-label">D</span>Motion is random.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SECTION 4: MOLES & AVOGADRO ════════════════ -->
+  <div class="section-card" style="animation-delay:0.2s">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Moles, Avogadro &amp; Molecular Counting</span>
+    </div>
+    <div class="section-body">
+      <p>One <strong>mole</strong> of any substance contains exactly \(N_A = 6.02 \times 10^{23}\) particles (the Avogadro constant). It is defined as the number of atoms in 12 g of carbon-12.</p>
+
+      <div class="eq-box">
+        \( n = \dfrac{M}{M_m} \qquad N = n N_A = \dfrac{M N_A}{M_m} \)
+      </div>
+
+      <p>where \(M\) is the mass of the sample, \(M_m\) is the molar mass, \(n\) is the number of moles, and \(N\) is the total number of molecules.</p>
+
+      <!-- Q4 -->
+      <div class="qa-block">
+        <div class="qa-header">⬡ QUICK CHECK · Q4 · Short Answer</div>
+        <div class="qa-q">How many moles are contained in 1.6 kg of oxygen gas? (Molar mass of O₂ = 32 g mol⁻¹ = 0.032 kg mol⁻¹)</div>
+        <div class="short-answer-wrap">
+          <input type="text" id="q4-in" placeholder="Answer in mol">
+          <div class="feedback-msg" id="q4-fb"></div>
+          <button class="check-btn" onclick="checkNumeric('q4-in','q4-fb','q4-ans',50,2,'q4-btn')" id="q4-btn">Check</button>
+          <div class="answer-reveal" id="q4-ans">
+            \(n = M/M_m = 1.6 / 0.032 = 50 \text{ mol}\)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SECTION 5: IDEAL GAS EQUATION ════════════════ -->
+  <div class="section-card" style="animation-delay:0.25s">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">The Ideal Gas Equation</span>
+    </div>
+    <div class="section-body">
+      <p>Combining all three gas laws gives a single equation of state. An <strong>ideal gas</strong> obeys this exactly:</p>
+
+      <div class="eq-box">
+        \( pV = nRT \qquad \text{or equivalently} \qquad pV = NkT \)
+      </div>
+
+      <p>where \(R = 8.31 \text{ J mol}^{-1}\text{K}^{-1}\) is the universal molar gas constant, \(k = R/N_A = 1.38 \times 10^{-23} \text{ J K}^{-1}\) is the Boltzmann constant (gas constant <em>per molecule</em>), \(n\) is moles, and \(N\) is number of molecules.</p>
+
+      <p>The <strong>combined gas equation</strong> for a fixed amount of gas changing state:</p>
+
+      <div class="eq-box">
+        \( \dfrac{p_1 V_1}{T_1} = \dfrac{p_2 V_2}{T_2} \)
+      </div>
+
+      <div class="key-concept">
+        <strong>UNITS CHECK</strong>
+        \(p\) in Pa, \(V\) in m³, \(T\) in K. Units of \(pV\): Pa·m³ = N·m = J. This is why \(R\) carries J mol⁻¹ K⁻¹.
+      </div>
+
+      <!-- Q5 -->
+      <div class="qa-block">
+        <div class="qa-header">⬡ QUICK CHECK · Q5 · Multiple Choice</div>
+        <div class="qa-q">What is the volume (in m³) occupied by 1 mole of an ideal gas at 0 °C and 1.013 × 10⁵ Pa? (\(R = 8.31\) J mol⁻¹ K⁻¹)</div>
+        <div class="mc-options" id="mc5">
+          <div class="mc-option" onclick="checkMC(this,'mc5',false)"><span class="mc-opt-label">A</span>0.0224 m³</div>
+          <div class="mc-option" onclick="checkMC(this,'mc5',true)"><span class="mc-opt-label">B</span>0.0224 m³ — \(V = nRT/p = (1)(8.31)(273)/(1.013\times10^5) \approx 0.0224\text{ m}^3\)</div>
+          <div class="mc-option" onclick="checkMC(this,'mc5',false)"><span class="mc-opt-label">C</span>22.4 m³</div>
+          <div class="mc-option" onclick="checkMC(this,'mc5',false)"><span class="mc-opt-label">D</span>8.31 m³</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SECTION 6: KE & TEMPERATURE ════════════════ -->
+  <div class="section-card" style="animation-delay:0.3s">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">Molecular Kinetic Energy &amp; Temperature</span>
+    </div>
+    <div class="section-body">
+      <p>From kinetic theory, the pressure exerted by \(N\) molecules each of mass \(m\) with mean-square speed \(\overline{c^2}\) is:</p>
+
+      <div class="eq-box">
+        \( pV = \tfrac{1}{3} N m \overline{c^2} \)
+      </div>
+
+      <p>Setting this equal to \(nRT\) and using \(N/n = N_A\):</p>
+
+      <div class="eq-box">
+        \( \tfrac{1}{2} m \overline{c^2} = \tfrac{3}{2} \dfrac{R}{N_A} T = \tfrac{3}{2} k T \)
+      </div>
+
+      <div class="key-concept">
+        <strong>KEY RESULT</strong>
+        The mean translational kinetic energy of a molecule \(E = \tfrac{3}{2}kT\) is directly proportional to absolute temperature. Double the Kelvin temperature → double the mean KE. The <em>internal energy</em> of an ideal gas is the sum of all these kinetic energies.
+      </div>
+
+      <!-- Q6 -->
+      <div class="qa-block">
+        <div class="qa-header">⬡ QUICK CHECK · Q6 · Short Answer</div>
+        <div class="qa-q">Calculate the mean translational KE (in J) of an oxygen molecule at 20 °C. (\(k = 1.38 \times 10^{-23}\) J K⁻¹)</div>
+        <div class="short-answer-wrap">
+          <input type="text" id="q6-in" placeholder="Answer in J (e.g. 6.07e-21)">
+          <div class="feedback-msg" id="q6-fb"></div>
+          <button class="check-btn" onclick="checkSci('q6-in','q6-fb','q6-ans',6.07e-21,0.15,'q6-btn')" id="q6-btn">Check</button>
+          <div class="answer-reveal" id="q6-ans">
+            \(T = 293\text{ K},\quad E = \tfrac{3}{2}kT = 1.5 \times 1.38\times10^{-23} \times 293 \approx 6.07\times10^{-21}\text{ J}\)
+          </div>
+        </div>
+      </div>
+
+      <!-- Q7: Ratio -->
+      <div class="qa-block" style="margin-top:1rem">
+        <div class="qa-header">⬡ QUICK CHECK · Q7 · Short Answer</div>
+        <div class="qa-q">A bicycle tyre contains air at 15 °C and 280 kPa. After riding, pressure rises to 290 kPa at constant volume. Calculate the ratio: <em>internal energy at new temperature / internal energy at 15 °C</em>.</div>
+        <div class="short-answer-wrap">
+          <input type="text" id="q7-in" placeholder="Ratio (e.g. 1.04)">
+          <div class="feedback-msg" id="q7-fb"></div>
+          <button class="check-btn" onclick="checkNumeric('q7-in','q7-fb','q7-ans',1.036,0.01,'q7-btn')" id="q7-btn">Check</button>
+          <div class="answer-reveal" id="q7-ans">
+            Since \(U \propto T\) and \(p \propto T\) (constant V): \(T_2/T_1 = p_2/p_1 = 290/280 \approx 1.036\). Ratio ≈ 1.036.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SECTION 7: MOLECULAR SPEED DISTRIBUTION ════════════════ -->
+  <div class="section-card" style="animation-delay:0.35s">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">Distribution of Molecular Speeds</span>
+    </div>
+    <div class="section-body">
+      <p>Gas molecules do <em>not</em> all move at the same speed. The Maxwell–Boltzmann distribution shows that the number of molecules peaks at a characteristic speed, with tails to very high and very low values. No molecules are stationary.</p>
+
+      <ul class="assumptions">
+        <li>At higher temperature the curve becomes <strong>flatter and broader</strong>.</li>
+        <li>The peak shifts to higher speeds — more molecules are in the high-speed tail.</li>
+        <li>\(\overline{c^2} \propto T\), so root-mean-square speed \(c_\text{rms} = \sqrt{3kT/m}\).</li>
+      </ul>
+
+      <!-- Q8: Open question -->
+      <div class="open-q-block">
+        <div class="open-q-header">✦ OPEN QUESTION · Q8 · Extended Response</div>
+        <div class="open-q-body">
+          <div class="open-q-marks">[6 marks]</div>
+          <p>A meteorological balloon is filled with helium at ground level (17 °C, 1.0 × 10⁵ Pa) and rises until it reaches a region where pressure is 1.0 × 10³ Pa and temperature is −43 °C.</p>
+          <p style="margin-top:0.6rem"><strong>Using your knowledge of the ideal gas equation and kinetic theory, explain and calculate:</strong></p>
+          <ul class="assumptions" style="margin:0.6rem 0 0.8rem">
+            <li>How the volume of the balloon changes as it rises, and why.</li>
+            <li>The ratio of the final to initial volume.</li>
+            <li>How the mean kinetic energy of a helium atom changes, and why.</li>
+          </ul>
+          <textarea class="open-q-textarea" placeholder="Write your extended response here…" rows="6"></textarea>
+
+          <!-- TEACHER MARK SCHEME -->
+          <div class="teacher-mark" id="q8-mark">
+            <h4>MARK SCHEME — TEACHER ONLY</h4>
+            <ul>
+              <li>States ideal gas equation \(pV = nRT\) or combined gas equation (1 mark)</li>
+              <li>Correctly converts temperatures: \(T_1 = 290\text{ K}\), \(T_2 = 230\text{ K}\) (1 mark)</li>
+              <li>Uses \(\frac{p_1 V_1}{T_1} = \frac{p_2 V_2}{T_2}\) correctly rearranged for \(V_2/V_1\) (1 mark)</li>
+              <li>Correct ratio: \(V_2/V_1 = \frac{p_1 T_2}{p_2 T_1} = \frac{10^5 \times 230}{10^3 \times 290} \approx 79\) (1 mark)</li>
+              <li>States mean KE = \(\tfrac{3}{2}kT\), so KE decreases as T falls from 290 K to 230 K (1 mark)</li>
+              <li>Ratio of KE: \(230/290 \approx 0.79\), i.e. KE decreases by ~21% — correctly linked to lower temperature (1 mark)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- SCORE STRIP -->
+<div class="score-strip">
+  <span class="score-label">Score</span>
+  <span class="score-val" id="score-val">0 / 7</span>
+  <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+</div>
+
+<script>
+  // ── STATE ──
+  const TEACHER_PWD = "Boyle1662";
+  let teacherMode = false;
+  let score = 0;
+  let answered = 0;
+  const totalQ = 7; // mc + short answers (not open)
+
+  // ── MODAL ──
+  function openModal() {
+    if (teacherMode) { deactivateTeacher(); return; }
+    document.getElementById('modal').classList.add('open');
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-error').textContent = '';
+    setTimeout(() => document.getElementById('pwd-input').focus(), 100);
+  }
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+  function checkPassword() {
+    const val = document.getElementById('pwd-input').value;
+    if (val === TEACHER_PWD) {
+      closeModal();
+      activateTeacher();
+    } else {
+      document.getElementById('pwd-error').textContent = 'Incorrect code.';
+      document.getElementById('pwd-input').value = '';
+    }
+  }
+  document.getElementById('pwd-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+    if (e.key === 'Escape') closeModal();
+  });
+  document.getElementById('modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('modal')) closeModal();
+  });
+
+  function activateTeacher() {
+    teacherMode = true;
+    document.getElementById('teacher-banner').classList.add('show');
+    document.getElementById('teacher-toggle').classList.add('active');
+    document.getElementById('teacher-toggle').textContent = '⚿ Exit Teacher Mode';
+    document.querySelectorAll('.teacher-mark').forEach(el => el.classList.add('show'));
+  }
+  function deactivateTeacher() {
+    teacherMode = false;
+    document.getElementById('teacher-banner').classList.remove('show');
+    document.getElementById('teacher-toggle').classList.remove('active');
+    document.getElementById('teacher-toggle').textContent = '⚿ Teacher Mode';
+    document.querySelectorAll('.teacher-mark').forEach(el => el.classList.remove('show'));
+  }
+
+  // ── MULTIPLE CHOICE ──
+  function checkMC(el, groupId, isCorrect) {
+    const group = document.getElementById(groupId);
+    if (group.classList.contains('locked')) return;
+    group.classList.add('locked');
+    group.querySelectorAll('.mc-option').forEach(o => o.classList.add('locked'));
+    el.classList.add(isCorrect ? 'correct' : 'wrong');
+    // find correct if wrong
+    if (!isCorrect) {
+      group.querySelectorAll('.mc-option').forEach(o => {
+        if (o !== el) {
+          // mark correct by detecting if it would have been correct
+          // We can't re-call, so we highlight nothing extra — user sees what they picked
+        }
+      });
+    }
+    if (isCorrect) score++;
+    answered++;
+    updateProgress();
+  }
+
+  // ── SHORT ANSWER — NUMERIC (tolerance) ──
+  function checkNumeric(inputId, fbId, revealId, target, tol, btnId) {
+    const input = document.getElementById(inputId);
+    const fb = document.getElementById(fbId);
+    const reveal = document.getElementById(revealId);
+    const btn = document.getElementById(btnId);
+    const val = parseFloat(input.value.replace(',',''));
+    if (isNaN(val)) { fb.className='feedback-msg err'; fb.textContent='Enter a number.'; return; }
+    btn.disabled = true;
+    input.disabled = true;
+    reveal.classList.add('show');
+    answered++;
+    if (Math.abs(val - target) <= tol) {
+      fb.className = 'feedback-msg ok';
+      fb.textContent = '✓ Correct!';
+      score++;
+    } else {
+      fb.className = 'feedback-msg err';
+      fb.textContent = `✗ Not quite — see the worked answer below.`;
+    }
+    updateProgress();
+    MathJax.typesetPromise([reveal]);
+  }
+
+  // ── SHORT ANSWER — SCIENTIFIC NOTATION (fractional tolerance) ──
+  function checkSci(inputId, fbId, revealId, target, fracTol, btnId) {
+    const input = document.getElementById(inputId);
+    const fb = document.getElementById(fbId);
+    const reveal = document.getElementById(revealId);
+    const btn = document.getElementById(btnId);
+    // allow e notation
+    const val = parseFloat(input.value.replace(/x/gi,'e').replace(/×/g,'e').replace('E','e'));
+    if (isNaN(val)) { fb.className='feedback-msg err'; fb.textContent='Enter a number (e.g. 6.07e-21).'; return; }
+    btn.disabled = true;
+    input.disabled = true;
+    reveal.classList.add('show');
+    answered++;
+    const relErr = Math.abs((val - target)/target);
+    if (relErr <= fracTol) {
+      fb.className = 'feedback-msg ok';
+      fb.textContent = '✓ Correct!';
+      score++;
+    } else {
+      fb.className = 'feedback-msg err';
+      fb.textContent = '✗ Check your calculation — see the worked answer below.';
+    }
+    updateProgress();
+    MathJax.typesetPromise([reveal]);
+  }
+
+  // ── PROGRESS ──
+  function updateProgress() {
+    const pct = Math.min(100, Math.round((answered / totalQ) * 100));
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label').textContent = `${answered} / ${totalQ} questions answered`;
+    document.getElementById('score-val').textContent = `${score} / ${totalQ}`;
+  }
+
+  // ── RESET ──
+  function resetAll() {
+    if (!confirm('Reset all answers?')) return;
+    score = 0; answered = 0;
+    // MC
+    document.querySelectorAll('.mc-options').forEach(g => {
+      g.classList.remove('locked');
+      g.querySelectorAll('.mc-option').forEach(o => {
+        o.classList.remove('correct','wrong','locked');
+      });
+    });
+    // Short
+    ['q2-in','q4-in','q6-in','q7-in'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.disabled = false; }
+    });
+    ['q2-fb','q4-fb','q6-fb','q7-fb'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = ''; el.className = 'feedback-msg'; }
+    });
+    ['q2-ans','q4-ans','q6-ans','q7-ans'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('show');
+    });
+    ['q2-btn','q4-btn','q6-btn','q7-btn'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = false;
+    });
+    updateProgress();
+  }
+</script>
+</body>
+</html>
