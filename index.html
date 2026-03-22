@@ -1,690 +1,1326 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Prattlemeter — IB Essay Diagnostic</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideal Gases — IB Physics DP Year 11</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    min-height: 100vh;
-    background: linear-gradient(160deg, #080a10 0%, #0f1219 40%, #121620 100%);
-    color: #fff;
-    font-family: 'Instrument Sans', sans-serif;
-    display: flex; justify-content: center;
-    padding: 40px 20px;
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #30363d;
+    --gold: #e6a817;
+    --gold-dim: #a07510;
+    --teal: #39d0c0;
+    --teal-dim: #1a6b63;
+    --red: #e05a5a;
+    --green: #3dba7a;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --teacher: #c084fc;
+    --derive: #60a5fa;
+    --derive-dim: #1e3a5f;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+    color: var(--gold);
+  }
+  header h1 span {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  .teacher-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .teacher-btn:hover { border-color: var(--teacher); color: var(--teacher); }
+  .teacher-btn.active { border-color: var(--teacher); color: var(--teacher); background: rgba(192,132,252,0.08); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .progress-track {
+    flex: 1; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 6rem;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section-header {
+    padding: 1.1rem 1.6rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    background: rgba(230,168,23,0.1);
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+    letter-spacing: 0.08em;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--text);
+  }
+  .section-body {
+    padding: 1.5rem 1.6rem;
+    line-height: 1.85;
+    font-size: 0.97rem;
+    color: var(--text);
+  }
+  .section-body p { margin-bottom: 1rem; }
+  .section-body p:last-child { margin-bottom: 0; }
+
+  /* ── EQUATION BOX ── */
+  .eq-box {
+    background: var(--surface2);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.4rem;
+    margin: 1.2rem 0;
+    font-size: 1.05rem;
+    text-align: center;
+    color: var(--teal);
+    overflow-x: auto;
+  }
+
+  /* ── DERIVATION BOX ── */
+  .derive-box {
+    background: rgba(96,165,250,0.05);
+    border: 1px solid rgba(96,165,250,0.25);
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.2rem 0;
+  }
+  .derive-box .derive-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--derive);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .derive-step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.3rem 1.2rem;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+    font-size: 0.94rem;
+  }
+  .derive-step-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--derive);
+    opacity: 0.7;
+    padding-top: 0.15rem;
+    white-space: nowrap;
+  }
+  .derive-comment {
+    font-size: 0.84rem;
+    color: var(--muted);
+    font-style: italic;
+    grid-column: 2;
+    margin-top: -0.2rem;
+    line-height: 1.4;
+    margin-bottom: 0.4rem;
+  }
+
+  /* ── KEY CONCEPT ── */
+  .key-concept {
+    background: rgba(230,168,23,0.06);
+    border: 1px solid rgba(230,168,23,0.25);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    color: var(--gold);
+    line-height: 1.7;
+  }
+  .key-concept strong {
+    font-style: normal;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--gold-dim);
+  }
+
+  /* ── WORKED EXAMPLE ── */
+  .worked {
+    background: rgba(57,208,192,0.04);
+    border: 1px solid rgba(57,208,192,0.2);
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.2rem 0;
+  }
+  .worked-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.7rem;
+  }
+  .worked-q {
+    font-size: 0.94rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .worked-sol {
+    font-size: 0.9rem;
+    color: #a8d8d4;
+    line-height: 1.8;
+  }
+  .worked-sol p { margin-bottom: 0.4rem; }
+
+  /* ── ASSUMPTIONS LIST ── */
+  .assumptions {
+    list-style: none;
+    margin: 0.8rem 0;
+  }
+  .assumptions li {
+    padding: 0.5rem 0 0.5rem 1.6rem;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+  .assumptions li:last-child { border-bottom: none; }
+  .assumptions li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--teal);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .mean-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .mean-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--border);
+    text-align: left;
+    font-weight: 500;
+  }
+  .mean-table td {
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--border);
+    vertical-align: middle;
+    line-height: 1.5;
+  }
+  .mean-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .mean-table .highlight-row td { color: var(--teal); }
+
+  /* ── Q&A BLOCK ── */
+  .qa-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 1.8rem;
+    overflow: hidden;
+  }
+  .qa-header {
+    background: rgba(57,208,192,0.07);
+    border-bottom: 1px solid var(--border);
+    padding: 0.7rem 1.2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+  }
+  .qa-q {
+    padding: 1.1rem 1.2rem 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  /* MC */
+  .mc-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 1.2rem 1.1rem;
+  }
+  .mc-option {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .mc-option:hover:not(.locked) { border-color: var(--teal); background: rgba(57,208,192,0.05); }
+  .mc-opt-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    min-width: 1.2rem;
+    margin-top: 0.05rem;
+  }
+  .mc-option.correct { border-color: var(--green); background: rgba(61,186,122,0.1); }
+  .mc-option.wrong   { border-color: var(--red);   background: rgba(224,90,90,0.1); }
+  .mc-option.show-correct { border-color: var(--green); background: rgba(61,186,122,0.06); }
+  .mc-option.correct .mc-opt-label { color: var(--green); }
+  .mc-option.wrong   .mc-opt-label { color: var(--red); }
+  .mc-option.show-correct .mc-opt-label { color: var(--green); }
+  .mc-reveal {
+    display: none;
+    padding: 0.6rem 1.2rem 1rem;
+    font-size: 0.87rem;
+    color: #a8d8d4;
+    line-height: 1.65;
+    border-top: 1px solid var(--border);
+  }
+  .mc-reveal.show { display: block; }
+
+  /* Short answer */
+  .short-answer-wrap {
+    padding: 0 1.2rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .short-answer-wrap input,
+  .short-answer-wrap textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.92rem;
+    padding: 0.65rem 0.9rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  .short-answer-wrap input:focus,
+  .short-answer-wrap textarea:focus { border-color: var(--teal); }
+  .check-btn {
+    align-self: flex-start;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    background: var(--teal-dim);
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 4px;
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .check-btn:hover { background: rgba(57,208,192,0.2); }
+  .check-btn:disabled { opacity: 0.4; cursor: default; }
+  .answer-reveal {
+    display: none;
+    background: rgba(61,186,122,0.07);
+    border: 1px solid rgba(61,186,122,0.3);
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+    color: #a8d8c4;
+    line-height: 1.7;
+  }
+  .answer-reveal.show { display: block; }
+  .feedback-msg {
+    font-size: 0.82rem;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 0.3rem 0;
+  }
+  .feedback-msg.ok  { color: var(--green); }
+  .feedback-msg.err { color: var(--red); }
+
+  /* ── OPEN QUESTION ── */
+  .open-q-block {
+    background: rgba(192,132,252,0.04);
+    border: 1px solid rgba(192,132,252,0.25);
+    border-radius: 8px;
+    margin-top: 1.8rem;
+    overflow: hidden;
+  }
+  .open-q-header {
+    background: rgba(192,132,252,0.1);
+    border-bottom: 1px solid rgba(192,132,252,0.2);
+    padding: 0.7rem 1.2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teacher);
+    letter-spacing: 0.1em;
+  }
+  .open-q-body {
+    padding: 1.1rem 1.2rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  .open-q-marks {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--teacher);
+    opacity: 0.7;
+    margin-bottom: 0.6rem;
+  }
+  .open-q-textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.92rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color 0.2s;
+    margin-top: 0.8rem;
+    display: block;
+  }
+  .open-q-textarea:focus { border-color: var(--teacher); }
+  .submit-open-btn {
+    margin-top: 0.6rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    background: rgba(192,132,252,0.12);
+    color: var(--teacher);
+    border: 1px solid var(--teacher);
+    border-radius: 4px;
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .submit-open-btn:hover { background: rgba(192,132,252,0.25); }
+  .submit-open-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* model answer */
+  .model-answer {
+    display: none;
+    margin-top: 1rem;
+    background: rgba(96,165,250,0.06);
+    border: 1px solid rgba(96,165,250,0.25);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    font-size: 0.88rem;
+    line-height: 1.8;
+    color: #b3ccf5;
+  }
+  .model-answer.show { display: block; }
+  .model-answer h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--derive);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.7rem;
+  }
+  .model-answer p { margin-bottom: 0.6rem; }
+  .model-answer p:last-child { margin-bottom: 0; }
+
+  /* teacher mark scheme */
+  .teacher-mark {
+    display: none;
+    margin-top: 0.6rem;
+    background: rgba(192,132,252,0.08);
+    border: 1px solid rgba(192,132,252,0.3);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+  .teacher-mark.show { display: block; }
+  .teacher-mark h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teacher);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+  }
+  .teacher-mark ul { list-style: none; }
+  .teacher-mark ul li {
+    padding: 0.25rem 0 0.25rem 1.3rem;
+    position: relative;
+    color: #d4b8ff;
+  }
+  .teacher-mark ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--teacher);
+    font-size: 0.8rem;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid rgba(192,132,252,0.4);
+    border-radius: 10px;
+    padding: 2rem; width: 340px; text-align: center;
+  }
+  .modal h2 { font-family: 'Playfair Display', serif; color: var(--teacher); margin-bottom: 0.4rem; font-size: 1.2rem; }
+  .modal p { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.2rem; line-height: 1.5; }
+  .modal input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    padding: 0.65rem 1rem;
+    text-align: center;
+    letter-spacing: 0.15em;
+    outline: none; margin-bottom: 0.8rem;
+    transition: border-color 0.2s;
+  }
+  .modal input:focus { border-color: var(--teacher); }
+  .modal-btns { display: flex; gap: 0.6rem; }
+  .modal-btns button {
+    flex: 1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem; letter-spacing: 0.05em;
+    padding: 0.6rem; border-radius: 5px; cursor: pointer;
+    border: 1px solid; transition: all 0.18s;
+  }
+  .btn-cancel { background: transparent; border-color: var(--border); color: var(--muted); }
+  .btn-cancel:hover { border-color: var(--red); color: var(--red); }
+  .btn-enter  { background: rgba(192,132,252,0.15); border-color: var(--teacher); color: var(--teacher); }
+  .btn-enter:hover { background: rgba(192,132,252,0.3); }
+  .modal-error { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--red); min-height: 1.1rem; margin-bottom: 0.4rem; }
+
+  /* ── TEACHER BANNER ── */
+  .teacher-banner {
+    display: none;
+    background: rgba(192,132,252,0.1);
+    border-bottom: 1px solid rgba(192,132,252,0.25);
+    padding: 0.5rem 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--teacher);
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+  .teacher-banner.show { display: block; }
+
+  /* ── SCORE STRIP ── */
+  .score-strip {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 0.75rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 50;
+  }
+  .score-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--muted); }
+  .score-val   { font-family: 'IBM Plex Mono', monospace; font-size: 1rem;   color: var(--gold); }
+  .reset-btn {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    padding: 0.35rem 0.8rem; border-radius: 4px; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.04em;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── UTILITY ── */
+  strong { font-weight: 600; }
+  em { font-style: italic; }
 </style>
 </head>
 <body>
-<div id="root"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- TEACHER PASSWORD MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>Teacher Mode</h2>
+    <p>Enter the access code to reveal mark schemes and open question guidance.</p>
+    <input type="password" id="pwd-input" placeholder="••••••" maxlength="20">
+    <div class="modal-error" id="pwd-error"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-enter" onclick="checkPassword()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <h1>Ideal Gases <span>IB Physics · DP Year 11</span></h1>
+  <button class="teacher-btn" id="teacher-toggle" onclick="openModal()">⚿ Teacher Mode</button>
+</header>
+<div class="teacher-banner" id="teacher-banner">⚿ TEACHER MODE ACTIVE — Mark schemes visible</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="progress-label" id="prog-label">0 / 8 questions answered</div>
+</div>
+
+<main>
+
+<!-- ════════════════ SECTION 1: KINETIC MODEL ════════════════ -->
+<div class="section-card" style="animation-delay:0.05s">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <span class="section-title">The Kinetic Model of an Ideal Gas</span>
+  </div>
+  <div class="section-body">
+    <p>Before deriving any equations, we need a physical picture. An <strong>ideal gas</strong> is a theoretical model in which we deliberately strip away molecular complexity and keep only the essentials.</p>
+
+    <p><strong>The four core assumptions:</strong></p>
+    <ul class="assumptions">
+      <li>The gas consists of a very large number of identical point-like molecules in rapid, random motion. "Point-like" means the volume of each molecule is negligible compared to the volume of the container.</li>
+      <li>Collisions between molecules, and between molecules and container walls, are <strong>perfectly elastic</strong> — kinetic energy is conserved. No energy is lost to heat or deformation during a collision.</li>
+      <li>There are no intermolecular forces except during the brief instant of a collision. Between collisions, molecules travel in straight lines at constant speed.</li>
+      <li>The duration of each collision is negligible compared to the time between collisions.</li>
+    </ul>
+
+    <div class="key-concept">
+      <strong>WHY THESE ASSUMPTIONS MATTER</strong>
+      Assumption 2 ensures kinetic energy is conserved in collisions. Assumption 3 is the crucial one: if there are no intermolecular attractive or repulsive forces between collisions, there is no <em>potential energy</em> associated with molecular separation. The total internal energy of the gas is therefore <em>purely kinetic</em> — it is just the sum of all the individual molecular kinetic energies. This is what makes the model tractable.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SECTION 2: MOLES & AVOGADRO ════════════════ -->
+<div class="section-card" style="animation-delay:0.1s">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <span class="section-title">Moles, Avogadro &amp; Counting Molecules</span>
+  </div>
+  <div class="section-body">
+    <p>One <strong>mole</strong> of any substance contains exactly \(N_A = 6.02 \times 10^{23}\) entities (the Avogadro constant). This number is defined such that one mole of carbon-12 atoms has a mass of exactly 12 g.</p>
+
+    <div class="eq-box">
+      \( n = \dfrac{M}{M_m} \qquad\qquad N = n N_A \)
+    </div>
+
+    <p>where \(M\) is the total mass of the sample, \(M_m\) is the molar mass (mass per mole, in kg mol⁻¹ or g mol⁻¹), \(n\) is the number of moles, and \(N\) is the total number of molecules. The Boltzmann constant is simply the gas constant divided by Avogadro's number:</p>
+
+    <div class="eq-box">
+      \( k = \dfrac{R}{N_A} = \dfrac{8.31}{6.02 \times 10^{23}} \approx 1.38 \times 10^{-23} \text{ J K}^{-1} \)
+    </div>
+
+    <p>It is the gas constant <em>per molecule</em> rather than per mole. You will see both \(nR\) and \(Nk\) in gas equations — they are exactly the same quantity.</p>
+
+    <!-- Q1 -->
+    <div class="qa-block">
+      <div class="qa-header">⬡ CHECK · Q1 · Short Answer</div>
+      <div class="qa-q">How many molecules are contained in 3.2 g of oxygen gas O₂? (Molar mass of O₂ = 32 g mol⁻¹, \(N_A = 6.02 \times 10^{23}\) mol⁻¹)</div>
+      <div class="short-answer-wrap">
+        <input type="text" id="q1-in" placeholder="e.g. 6.02e22">
+        <div class="feedback-msg" id="q1-fb"></div>
+        <button class="check-btn" onclick="checkSci('q1-in','q1-fb','q1-ans',6.02e22,0.05,'q1-btn')" id="q1-btn">Check</button>
+        <div class="answer-reveal" id="q1-ans">
+          \(n = 3.2/32 = 0.1\text{ mol}\). Then \(N = nN_A = 0.1 \times 6.02\times10^{23} = 6.02\times10^{22}\text{ molecules}\).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SECTION 3: RMS SPEED ════════════════ -->
+<div class="section-card" style="animation-delay:0.15s">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <span class="section-title">What is the Root-Mean-Square Speed?</span>
+  </div>
+  <div class="section-body">
+    <p>Gas molecules do not all move at the same speed — they have a continuous <em>distribution</em> of speeds. To describe the typical speed, we need a single representative number. There are three natural candidates, and they are not the same.</p>
+
+    <p>Consider five molecules with speeds (in m s⁻¹): <strong>200, 300, 400, 500, 600</strong>.</p>
+
+    <table class="mean-table">
+      <tr>
+        <th>Name</th>
+        <th>Definition</th>
+        <th>Formula applied</th>
+        <th>Value</th>
+      </tr>
+      <tr>
+        <td><strong>Arithmetic mean</strong> \(\bar{c}\)</td>
+        <td>Average of speeds</td>
+        <td>\(\dfrac{200+300+400+500+600}{5}\)</td>
+        <td>400 m s⁻¹</td>
+      </tr>
+      <tr>
+        <td><strong>Geometric mean</strong></td>
+        <td>Fifth root of product</td>
+        <td>\((200\times300\times400\times500\times600)^{1/5}\)</td>
+        <td>≈ 383 m s⁻¹</td>
+      </tr>
+      <tr class="highlight-row">
+        <td><strong>RMS speed</strong> \(c_\text{rms}\)</td>
+        <td>Square root of mean of squared speeds</td>
+        <td>\(\sqrt{\dfrac{200^2+300^2+400^2+500^2+600^2}{5}}\)</td>
+        <td>≈ 412 m s⁻¹</td>
+      </tr>
+    </table>
+
+    <p>The RMS is always <em>larger</em> than the arithmetic mean for any spread of positive values — the squaring step weights faster molecules more heavily. In physics, we use the RMS because kinetic energy goes as \(v^2\): when we write \(\frac{1}{2}m\overline{c^2}\), we literally need the mean of the squared speeds, not the square of the mean speed. These are different quantities:</p>
+
+    <div class="eq-box">
+      \( \overline{c^2} \neq \left(\bar{c}\right)^2 \qquad \Longrightarrow \qquad c_\text{rms} = \sqrt{\overline{c^2}} \neq \bar{c} \)
+    </div>
+
+    <div class="key-concept">
+      <strong>WHY NOT JUST USE THE ARITHMETIC MEAN?</strong>
+      Because kinetic energy is \(\tfrac{1}{2}mv^2\), the mean kinetic energy of the gas involves \(\overline{v^2}\), not \(\bar{v}\). Using \(\bar{v}\) would give the wrong answer for energy calculations. The RMS is the natural average when the quantity of interest is proportional to the square of what you're averaging.
+    </div>
+
+    <div class="worked">
+      <div class="worked-title">⊕ WORKED EXAMPLE — RMS calculation</div>
+      <div class="worked-q">Three molecules have speeds 100, 200, and 300 m s⁻¹. Find \(c_\text{rms}\).</div>
+      <div class="worked-sol">
+        <p>Step 1 — square each speed: \(100^2 = 10\,000\), \(200^2 = 40\,000\), \(300^2 = 90\,000\).</p>
+        <p>Step 2 — take the mean: \(\overline{c^2} = (10\,000 + 40\,000 + 90\,000)/3 = 140\,000/3 \approx 46\,667\text{ m}^2\text{s}^{-2}\).</p>
+        <p>Step 3 — take the square root: \(c_\text{rms} = \sqrt{46\,667} \approx 216\text{ m s}^{-1}\).</p>
+        <p>Compare: arithmetic mean = \((100+200+300)/3 = 200\text{ m s}^{-1}\). As expected, \(c_\text{rms} > \bar{c}\).</p>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="qa-block">
+      <div class="qa-header">⬡ CHECK · Q2 · Short Answer</div>
+      <div class="qa-q">Four molecules have speeds 100, 200, 300, and 400 m s⁻¹. Calculate \(c_\text{rms}\) to 3 significant figures.</div>
+      <div class="short-answer-wrap">
+        <input type="text" id="q2-in" placeholder="in m s⁻¹">
+        <div class="feedback-msg" id="q2-fb"></div>
+        <button class="check-btn" onclick="checkNumeric('q2-in','q2-fb','q2-ans',274,3,'q2-btn')" id="q2-btn">Check</button>
+        <div class="answer-reveal" id="q2-ans">
+          \(\overline{c^2} = \dfrac{100^2+200^2+300^2+400^2}{4} = \dfrac{10000+40000+90000+160000}{4} = \dfrac{300000}{4} = 75000\). 
+          Then \(c_\text{rms} = \sqrt{75000} \approx 274\text{ m s}^{-1}\).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SECTION 4: PRESSURE DERIVATION ════════════════ -->
+<div class="section-card" style="animation-delay:0.2s">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <span class="section-title">Deriving \(pV = \tfrac{1}{3}Nm\overline{c^2}\) — Pressure from Kinetic Theory</span>
+  </div>
+  <div class="section-body">
+    <p>We now derive the central result of kinetic theory. The strategy is to calculate the force exerted on a wall by a single molecule, then sum over all \(N\) molecules. The derivation uses Newton's second law and makes the isotropy assumption (motion is equally likely in all directions).</p>
+
+    <div class="derive-box">
+      <div class="derive-title">▸ DERIVATION — step by step</div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 1</span>
+        <span>Consider one molecule of mass \(m\) moving with speed component \(u\) towards a wall of area \(A\), in a cubic box of side \(L\).</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 2</span>
+        <span>Elastic collision with the wall: momentum changes from \(+mu\) to \(-mu\). Change in momentum: \(\Delta p = 2mu\).</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 3</span>
+        <span>Time between successive collisions with the same wall: the molecule travels \(2L\) at speed \(u\), so \(\Delta t = 2L/u\).</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 4</span>
+        <span>Force from this one molecule on the wall: \(F = \Delta p / \Delta t = 2mu \div (2L/u) = mu^2/L\).</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 5</span>
+        <span>Sum over all \(N\) molecules (each has a different \(x\)-component \(u_i\)):
+          \[F_\text{total} = \dfrac{m}{L}\sum_{i=1}^{N} u_i^2 = \dfrac{Nm}{L}\overline{u^2}\]
+        </span>
+      </div>
+      <span class="derive-comment">where \(\overline{u^2}\) is the mean of the squared \(x\)-components of velocity.</span>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 6</span>
+        <span><strong>Isotropy:</strong> since motion is random, there is no preferred direction. Therefore \(\overline{u^2} = \overline{v^2} = \overline{w^2}\) (for \(x\), \(y\), \(z\) components). Also \(\overline{c^2} = \overline{u^2} + \overline{v^2} + \overline{w^2} = 3\overline{u^2}\), so \(\overline{u^2} = \tfrac{1}{3}\overline{c^2}\).</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 7</span>
+        <span>Pressure \(p = F/A = F/L^2\) and volume \(V = L^3\):
+          \[p = \dfrac{Nm\overline{u^2}}{L^3} = \dfrac{Nm \cdot \tfrac{1}{3}\overline{c^2}}{V}\]
+        </span>
+      </div>
+    </div>
+
+    <div class="eq-box">
+      \( pV = \tfrac{1}{3}Nm\overline{c^2} \)
+    </div>
+
+    <p>A quick <strong>dimensional check</strong>: \([N] = 1\), \([m] = \text{kg}\), \([\overline{c^2}] = \text{m}^2\text{s}^{-2}\). So \([Nm\overline{c^2}] = \text{kg m}^2\text{s}^{-2} = \text{J}\). And \([pV] = \text{Pa}\cdot\text{m}^3 = \text{N m}^{-2}\cdot\text{m}^3 = \text{N m} = \text{J}\). ✓</p>
+
+    <!-- Q3 -->
+    <div class="qa-block">
+      <div class="qa-header">⬡ CHECK · Q3 · Multiple Choice</div>
+      <div class="qa-q">In the derivation above, the step \(\overline{u^2} = \tfrac{1}{3}\overline{c^2}\) relies on which assumption?</div>
+      <div class="mc-options" id="mc3">
+        <div class="mc-option" onclick="checkMC(this,'mc3',false,'mc3-rev')">
+          <span class="mc-opt-label">A</span>Collisions with the wall are perfectly elastic.
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc3',false,'mc3-rev')">
+          <span class="mc-opt-label">B</span>The number of molecules is very large.
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc3',true,'mc3-rev')">
+          <span class="mc-opt-label">C</span>Molecular motion is random and isotropic — no preferred direction of travel.
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc3',false,'mc3-rev')">
+          <span class="mc-opt-label">D</span>There are no intermolecular forces between collisions.
+        </div>
+      </div>
+      <div class="mc-reveal" id="mc3-rev">
+        <strong>C is correct.</strong> The isotropy assumption says all three Cartesian components of velocity are statistically equivalent: \(\overline{u^2} = \overline{v^2} = \overline{w^2}\). Since \(\overline{c^2} = \overline{u^2}+\overline{v^2}+\overline{w^2} = 3\overline{u^2}\), we get \(\overline{u^2} = \frac{1}{3}\overline{c^2}\). Option A ensures kinetic energy is conserved but says nothing about direction; options B and D are other assumptions but do not produce this particular step.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SECTION 5: E_K = 3/2 kT ════════════════ -->
+<div class="section-card" style="animation-delay:0.25s">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <span class="section-title">Mean Kinetic Energy and Temperature: \(E_k = \tfrac{3}{2}kT\)</span>
+  </div>
+  <div class="section-body">
+    <p>We now connect kinetic theory to thermodynamics by combining the result of Section 04 with the ideal gas equation.</p>
+
+    <div class="derive-box">
+      <div class="derive-title">▸ DERIVATION — linking \(pV = \tfrac{1}{3}Nm\overline{c^2}\) to \(pV = NkT\)</div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 1</span>
+        <span>From kinetic theory: \(\quad pV = \tfrac{1}{3}Nm\overline{c^2}\)</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 2</span>
+        <span>From thermodynamics (the ideal gas law): \(\quad pV = NkT\)</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 3</span>
+        <span>Set equal: \(\quad \tfrac{1}{3}Nm\overline{c^2} = NkT\)</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 4</span>
+        <span>Divide both sides by \(N\): \(\quad \tfrac{1}{3}m\overline{c^2} = kT\)</span>
+      </div>
+      <div class="derive-step">
+        <span class="derive-step-num">Step 5</span>
+        <span>Multiply both sides by \(\tfrac{3}{2}\): \(\quad \tfrac{1}{2}m\overline{c^2} = \tfrac{3}{2}kT\)</span>
+      </div>
+    </div>
+
+    <div class="eq-box">
+      \( E_k = \tfrac{1}{2}m\overline{c^2} = \tfrac{3}{2}kT \)
+    </div>
+
+    <p>The left side is precisely the mean translational kinetic energy per molecule. The \(\tfrac{1}{2}m\overline{c^2}\) uses the <em>mean of the squared speeds</em>, exactly as we defined for the RMS — not the arithmetic mean, not the geometric mean. This is why the RMS speed is the natural choice.</p>
+
+    <div class="key-concept">
+      <strong>THREE IMPORTANT CONSEQUENCES</strong>
+      (i) Mean KE depends only on temperature — not on the identity of the gas (mass, type, etc.). A helium atom and a nitrogen molecule at the same temperature have the same mean kinetic energy. (ii) Since internal energy \(U = N \cdot \tfrac{3}{2}kT = \tfrac{3}{2}nRT\), it depends only on \(n\) and \(T\). (iii) At absolute zero (\(T = 0\text{ K}\)), \(E_k = 0\) — molecules have no thermal kinetic energy. This gives physical meaning to 0 K as the true zero of the temperature scale.
+    </div>
+
+    <p>From \(E_k = \tfrac{3}{2}kT\) and \(E_k = \tfrac{1}{2}m\overline{c^2}\), we can also write the RMS speed explicitly:</p>
+
+    <div class="eq-box">
+      \( c_\text{rms} = \sqrt{\overline{c^2}} = \sqrt{\dfrac{3kT}{m}} = \sqrt{\dfrac{3RT}{M_m}} \)
+    </div>
+
+    <div class="worked">
+      <div class="worked-title">⊕ WORKED EXAMPLE — Mean KE</div>
+      <div class="worked-q">Find the mean translational kinetic energy of a gas molecule at 27 °C.</div>
+      <div class="worked-sol">
+        <p>Convert: \(T = 27 + 273 = 300\text{ K}\).</p>
+        <p>\(E_k = \tfrac{3}{2}kT = \tfrac{3}{2} \times 1.38\times10^{-23} \times 300 = 6.21\times10^{-21}\text{ J}\).</p>
+        <p>Note: this answer is the same regardless of which gas — hydrogen, oxygen, xenon, anything.</p>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="qa-block">
+      <div class="qa-header">⬡ CHECK · Q4 · Short Answer</div>
+      <div class="qa-q">Calculate the rms speed of a nitrogen molecule (N₂, molar mass 0.028 kg mol⁻¹) at 300 K. (\(R = 8.31\) J mol⁻¹ K⁻¹)</div>
+      <div class="short-answer-wrap">
+        <input type="text" id="q4-in" placeholder="in m s⁻¹ (to 3 s.f.)">
+        <div class="feedback-msg" id="q4-fb"></div>
+        <button class="check-btn" onclick="checkNumeric('q4-in','q4-fb','q4-ans',516,10,'q4-btn')" id="q4-btn">Check</button>
+        <div class="answer-reveal" id="q4-ans">
+          \(c_\text{rms} = \sqrt{3RT/M_m} = \sqrt{3 \times 8.31 \times 300 / 0.028} = \sqrt{266\,464} \approx 516\text{ m s}^{-1}\).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SECTION 6: GAS LAWS ════════════════ -->
+<div class="section-card" style="animation-delay:0.3s">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <span class="section-title">The Gas Laws &amp; the Ideal Gas Equation</span>
+  </div>
+  <div class="section-body">
+    <p>The three empirical gas laws are special cases of the ideal gas equation, each obtained by holding one variable constant.</p>
+
+    <div class="eq-box">
+      \(\underbrace{pV = nRT}_{\text{molar form}} \qquad\equiv\qquad \underbrace{pV = NkT}_{\text{molecular form}}\)
+    </div>
+
+    <p>where \(R = 8.31\text{ J mol}^{-1}\text{K}^{-1}\), \(k = 1.38\times10^{-23}\text{ J K}^{-1}\), \(n\) = moles, \(N\) = number of molecules. <em>Temperature must always be in Kelvin: \(T(\text{K}) = T(°\text{C}) + 273\).</em></p>
+
+    <table class="mean-table">
+      <tr>
+        <th>Law</th>
+        <th>Held constant</th>
+        <th>Relationship</th>
+        <th>Form</th>
+      </tr>
+      <tr>
+        <td>Boyle's</td>
+        <td>\(T\), \(n\)</td>
+        <td>\(p \propto 1/V\)</td>
+        <td>\(p_1V_1 = p_2V_2\)</td>
+      </tr>
+      <tr>
+        <td>Charles'</td>
+        <td>\(p\), \(n\)</td>
+        <td>\(V \propto T\)</td>
+        <td>\(V_1/T_1 = V_2/T_2\)</td>
+      </tr>
+      <tr>
+        <td>Pressure law</td>
+        <td>\(V\), \(n\)</td>
+        <td>\(p \propto T\)</td>
+        <td>\(p_1/T_1 = p_2/T_2\)</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>Combined</td>
+        <td>\(n\) only</td>
+        <td>—</td>
+        <td>\(\dfrac{p_1V_1}{T_1} = \dfrac{p_2V_2}{T_2}\)</td>
+      </tr>
+    </table>
+
+    <div class="key-concept">
+      <strong>UNITS CHECK — pV = nRT</strong>
+      \(p\) in Pa = N m⁻², \(V\) in m³, so \(pV\) has units N m = J. On the right: \(n\) in mol, \(T\) in K, so \(R\) must have units J mol⁻¹ K⁻¹. This is why you cannot use cm³ or kPa directly — convert everything to SI first.
+    </div>
+
+    <div class="worked">
+      <div class="worked-title">⊕ WORKED EXAMPLE — Boyle's Law</div>
+      <div class="worked-q">A gas is compressed at constant temperature from 4.0 × 10⁻³ m³ at 1.0 × 10⁵ Pa to a new pressure of 4.0 × 10⁵ Pa. Find the new volume.</div>
+      <div class="worked-sol">
+        <p>Using \(p_1V_1 = p_2V_2\):</p>
+        <p>\(V_2 = \dfrac{p_1 V_1}{p_2} = \dfrac{1.0\times10^5 \times 4.0\times10^{-3}}{4.0\times10^5} = 1.0\times10^{-3}\text{ m}^3\).</p>
+        <p>The volume decreases by a factor of 4, as expected — pressure quadrupled.</p>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="qa-block">
+      <div class="qa-header">⬡ CHECK · Q5 · Multiple Choice</div>
+      <div class="qa-q">A fixed mass of gas at 27 °C occupies 2.0 × 10⁻³ m³ at 1.0 × 10⁵ Pa. What volume does it occupy at 127 °C and 2.0 × 10⁵ Pa?</div>
+      <div class="mc-options" id="mc5">
+        <div class="mc-option" onclick="checkMC(this,'mc5',false,'mc5-rev')">
+          <span class="mc-opt-label">A</span>4.0 × 10⁻³ m³
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc5',true,'mc5-rev')">
+          <span class="mc-opt-label">B</span>1.33 × 10⁻³ m³
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc5',false,'mc5-rev')">
+          <span class="mc-opt-label">C</span>2.67 × 10⁻³ m³
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc5',false,'mc5-rev')">
+          <span class="mc-opt-label">D</span>1.0 × 10⁻³ m³
+        </div>
+      </div>
+      <div class="mc-reveal" id="mc5-rev">
+        <strong>B is correct.</strong> Convert temperatures: \(T_1 = 300\text{ K}\), \(T_2 = 400\text{ K}\). Using the combined gas law:
+        \(V_2 = V_1 \times \dfrac{p_1}{p_2} \times \dfrac{T_2}{T_1} = 2.0\times10^{-3} \times \dfrac{10^5}{2\times10^5} \times \dfrac{400}{300} = 2.0\times10^{-3} \times 0.5 \times 1.333 = 1.33\times10^{-3}\text{ m}^3\).
+        Option A ignores both the pressure change and the temperature conversion. Option C only accounts for temperature. Watch out for the Kelvin conversion — adding 100 K to 27 °C gives 400 K, not 227 K.
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="qa-block" style="margin-top:1rem">
+      <div class="qa-header">⬡ CHECK · Q6 · Short Answer</div>
+      <div class="qa-q">A gas occupies volume \(V\) at 27 °C and constant pressure. At what temperature (in °C) will the volume be \(3V\)?</div>
+      <div class="short-answer-wrap">
+        <input type="text" id="q6-in" placeholder="Temperature in °C">
+        <div class="feedback-msg" id="q6-fb"></div>
+        <button class="check-btn" onclick="checkNumeric('q6-in','q6-fb','q6-ans',627,5,'q6-btn')" id="q6-btn">Check</button>
+        <div class="answer-reveal" id="q6-ans">
+          \(T_1 = 300\text{ K}\). Charles' law: \(V_1/T_1 = V_2/T_2\), so \(T_2 = T_1 \times V_2/V_1 = 300 \times 3 = 900\text{ K} = 627°\text{C}\).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SECTION 7: SPEED DISTRIBUTION ════════════════ -->
+<div class="section-card" style="animation-delay:0.35s">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <span class="section-title">The Maxwell–Boltzmann Speed Distribution</span>
+  </div>
+  <div class="section-body">
+    <p>The equation \(c_\text{rms} = \sqrt{3kT/m}\) gives a single representative speed, but real gases contain molecules with a wide spread of speeds. The <strong>Maxwell–Boltzmann distribution</strong> describes how many molecules have each speed.</p>
+
+    <ul class="assumptions">
+      <li>The distribution is asymmetric: it has a long tail to high speeds but cuts off sharply near zero (no molecules are stationary).</li>
+      <li>There are three characteristic speeds: the most probable speed (peak of curve) &lt; mean speed &lt; rms speed. All three are different.</li>
+      <li>At higher temperature: the peak shifts to higher speeds, the curve broadens and flattens, and the area under the curve (total number of molecules) stays constant.</li>
+      <li>Since \(c_\text{rms} \propto \sqrt{T/m}\), lighter molecules (smaller \(m\)) move faster at the same temperature — this is why hydrogen escapes Earth's atmosphere while nitrogen does not.</li>
+    </ul>
+
+    <!-- Q7 -->
+    <div class="qa-block">
+      <div class="qa-header">⬡ CHECK · Q7 · Multiple Choice</div>
+      <div class="qa-q">A sample of gas is heated from 300 K to 1200 K at constant volume. By what factor does the rms speed of the molecules change?</div>
+      <div class="mc-options" id="mc7">
+        <div class="mc-option" onclick="checkMC(this,'mc7',false,'mc7-rev')">
+          <span class="mc-opt-label">A</span>4
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc7',false,'mc7-rev')">
+          <span class="mc-opt-label">B</span>16
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc7',true,'mc7-rev')">
+          <span class="mc-opt-label">C</span>2
+        </div>
+        <div class="mc-option" onclick="checkMC(this,'mc7',false,'mc7-rev')">
+          <span class="mc-opt-label">D</span>√2
+        </div>
+      </div>
+      <div class="mc-reveal" id="mc7-rev">
+        <strong>C is correct.</strong> Since \(c_\text{rms} \propto \sqrt{T}\), the ratio is \(\sqrt{T_2/T_1} = \sqrt{1200/300} = \sqrt{4} = 2\). A common error is to say the factor is 4 (confusing the ratio of temperatures with the ratio of speeds) or to forget the square root. Note: the mean KE would increase by a factor of 4, since \(E_k \propto T\) — the temperature ratio itself.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ SECTION 8: EXTENDED QUESTION ════════════════ -->
+<div class="section-card" style="animation-delay:0.4s">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <span class="section-title">Extended Response Question</span>
+  </div>
+  <div class="section-body">
+    <div class="open-q-block">
+      <div class="open-q-header">✦ EXTENDED RESPONSE · Q8</div>
+      <div class="open-q-body">
+        <div class="open-q-marks">[8 marks]</div>
+        <p>A meteorological balloon is filled with helium (molar mass 4.0 × 10⁻³ kg mol⁻¹) at ground level where the temperature is 17 °C and pressure is 1.00 × 10⁵ Pa. The balloon rises until it reaches a region where the pressure is 2.50 × 10³ Pa and temperature is −43 °C.</p>
+
+        <ul class="assumptions" style="margin: 0.8rem 0;">
+          <li><strong>(a)</strong> State the ideal gas equation and use it to find the ratio \(V_\text{final} / V_\text{initial}\). [3]</li>
+          <li><strong>(b)</strong> Calculate the mean translational kinetic energy of a helium atom at ground level. [\(k = 1.38 \times 10^{-23}\) J K⁻¹] [2]</li>
+          <li><strong>(c)</strong> Calculate the rms speed of a helium atom at the top of the flight. [\(R = 8.31\) J mol⁻¹ K⁻¹] [2]</li>
+          <li><strong>(d)</strong> Explain, in terms of the kinetic model, why the balloon expands as it rises even though the helium atoms are moving more slowly at altitude. [1]</li>
+        </ul>
+
+        <textarea class="open-q-textarea" id="q8-text" placeholder="Write your full response here. Show all working for calculation parts."></textarea>
+        <button class="submit-open-btn" id="q8-submit" onclick="submitOpen()">Submit — reveal model answer</button>
+
+        <!-- MODEL ANSWER (student-facing) -->
+        <div class="model-answer" id="q8-model">
+          <h4>MODEL ANSWER</h4>
+          <p><strong>(a)</strong> The ideal gas equation is \(pV = nRT\). For a fixed amount of gas changing state, \(\dfrac{p_1 V_1}{T_1} = \dfrac{p_2 V_2}{T_2}\). Converting: \(T_1 = 290\text{ K}\), \(T_2 = 230\text{ K}\). Rearranging: \(\dfrac{V_2}{V_1} = \dfrac{p_1 T_2}{p_2 T_1} = \dfrac{1.00\times10^5 \times 230}{2.50\times10^3 \times 290} \approx 31.7\). The volume increases by a factor of approximately 32.</p>
+          <p><strong>(b)</strong> \(T_1 = 290\text{ K}\). Mean KE \(= \tfrac{3}{2}kT = 1.5 \times 1.38\times10^{-23} \times 290 = 6.00\times10^{-21}\text{ J}\).</p>
+          <p><strong>(c)</strong> At altitude, \(T_2 = 230\text{ K}\). \(c_\text{rms} = \sqrt{3RT/M_m} = \sqrt{3 \times 8.31 \times 230 / (4.0\times10^{-3})} = \sqrt{1\,433\,325} \approx 1197\text{ m s}^{-1} \approx 1.20\text{ km s}^{-1}\).</p>
+          <p><strong>(d)</strong> Pressure is caused by molecules colliding with the container walls. At altitude, the external air pressure is much lower — the atmosphere exerts less inward force on the balloon skin. Even though the helium molecules are moving more slowly (lower temperature → lower mean KE), the reduced external pressure means the balloon expands until the pressure of the helium inside equals the lower external pressure. The rate of momentum transfer per unit area (internal pressure) drops as the volume increases, reaching equilibrium at a larger volume.</p>
+        </div>
+
+        <!-- TEACHER MARK SCHEME -->
+        <div class="teacher-mark" id="q8-mark">
+          <h4>MARK SCHEME — TEACHER ONLY</h4>
+          <ul>
+            <li>(a) States \(pV = nRT\) or combined form [1]</li>
+            <li>(a) Correct temperature conversions: \(T_1 = 290\text{ K}\), \(T_2 = 230\text{ K}\) [1]</li>
+            <li>(a) Correct ratio \(V_2/V_1 = (p_1 T_2)/(p_2 T_1) \approx 31.7\) [1] — accept 31–32</li>
+            <li>(b) Uses \(E_k = \tfrac{3}{2}kT\) with \(T = 290\text{ K}\) correctly [1]</li>
+            <li>(b) Answer \(6.00 \times 10^{-21}\text{ J}\) (±5%) [1]</li>
+            <li>(c) Uses \(c_\text{rms} = \sqrt{3RT/M_m}\) with correct \(M_m\) and \(T = 230\text{ K}\) [1]</li>
+            <li>(c) Answer ≈ 1197 m s⁻¹ (±2%) [1]</li>
+            <li>(d) Award 1 mark for a response that mentions: reduced external pressure → unbalanced force outward → balloon expands. Do not accept "molecules move more slowly so they spread out" — this confuses the mechanism.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- SCORE STRIP -->
+<div class="score-strip">
+  <span class="score-label">Score</span>
+  <span class="score-val" id="score-val">0 / 8</span>
+  <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+</div>
+
 <script>
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-</script>
+  const TEACHER_PWD = "Boyle1662";
+  let teacherMode = false;
+  let score = 0;
+  let answered = 0;
+  const totalQ = 8;
 
-<script type="text/babel">
-const { useState, useRef, useEffect, useCallback } = React;
-
-// ── Gauge ────────────────────────────────────────────────────────
-function Gauge({ label, subtitle, value, analyzing }) {
-  const [displayed, setDisplayed] = useState(0);
-
-  useEffect(() => {
-    if (value === null) { setDisplayed(0); return; }
-    const target = value;
-    const duration = 900;
-    const t0 = performance.now();
-    function tick(now) {
-      const p = Math.min((now - t0) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setDisplayed(Math.round(eased * target));
-      if (p < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }, [value]);
-
-  const cx = 90, cy = 90, r = 72;
-  const startAngle = -225, endAngle = 45;
-  const sweep = endAngle - startAngle;
-  const fraction = displayed / 100;
-  const filledAngle = startAngle + sweep * fraction;
-
-  function polarToCart(deg) {
-    const rad = (deg * Math.PI) / 180;
-    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  // ── MODAL ──
+  function openModal() {
+    if (teacherMode) { deactivateTeacher(); return; }
+    document.getElementById('modal').classList.add('open');
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-error').textContent = '';
+    setTimeout(() => document.getElementById('pwd-input').focus(), 100);
   }
-  const bgStart = polarToCart(startAngle);
-  const bgEnd   = polarToCart(endAngle);
-  const fgEnd   = polarToCart(filledAngle);
-
-  function arcPath(sx, sy, ex, ey, large) {
-    return `M ${sx} ${sy} A ${r} ${r} 0 ${large} 1 ${ex} ${ey}`;
+  function closeModal() { document.getElementById('modal').classList.remove('open'); }
+  function checkPassword() {
+    const val = document.getElementById('pwd-input').value;
+    if (val === TEACHER_PWD) { closeModal(); activateTeacher(); }
+    else { document.getElementById('pwd-error').textContent = 'Incorrect code.'; document.getElementById('pwd-input').value = ''; }
   }
-  const bgPath = arcPath(bgStart.x, bgStart.y, bgEnd.x, bgEnd.y, 1);
-  const fgLarge = (filledAngle - startAngle) > 180 ? 1 : 0;
-  const fgPath = fraction > 0.003
-    ? arcPath(bgStart.x, bgStart.y, fgEnd.x, fgEnd.y, fgLarge)
-    : "";
+  document.getElementById('pwd-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+    if (e.key === 'Escape') closeModal();
+  });
+  document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
 
-  function scoreColor(v) {
-    if (v <= 50) {
-      const t = v / 50;
-      return `rgb(${Math.round(34 + t * 183)},${Math.round(197 + t * -37)},${Math.round(94 + t * -54)})`;
-    } else {
-      const t = (v - 50) / 50;
-      return `rgb(${Math.round(217 + t * -10)},${Math.round(160 - t * 130)},${Math.round(40 - t * 20)})`;
-    }
+  function activateTeacher() {
+    teacherMode = true;
+    document.getElementById('teacher-banner').classList.add('show');
+    document.getElementById('teacher-toggle').classList.add('active');
+    document.getElementById('teacher-toggle').textContent = '⚿ Exit Teacher Mode';
+    document.querySelectorAll('.teacher-mark').forEach(el => el.classList.add('show'));
   }
-  const color = scoreColor(displayed);
-
-  function severity(v) {
-    if (v === null) return "";
-    if (v < 25) return "Low";
-    if (v < 50) return "Moderate";
-    if (v < 75) return "Elevated";
-    return "Severe";
+  function deactivateTeacher() {
+    teacherMode = false;
+    document.getElementById('teacher-banner').classList.remove('show');
+    document.getElementById('teacher-toggle').classList.remove('active');
+    document.getElementById('teacher-toggle').textContent = '⚿ Teacher Mode';
+    document.querySelectorAll('.teacher-mark').forEach(el => el.classList.remove('show'));
   }
 
-  return (
-    <div style={{
-      display: "flex", flexDirection: "column", alignItems: "center",
-      background: "rgba(15,18,25,0.65)", borderRadius: 18,
-      border: `1px solid ${value !== null ? color + "33" : "rgba(255,255,255,0.06)"}`,
-      padding: "28px 18px 22px", minWidth: 190,
-      transition: "border-color 0.6s, box-shadow 0.6s",
-      boxShadow: value !== null ? `0 0 32px ${color}15` : "none",
-    }}>
-      <svg width="180" height="130" viewBox="0 0 180 130">
-        <path d={bgPath} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="14" strokeLinecap="round"/>
-        {fgPath && (
-          <path d={fgPath} fill="none" stroke={color} strokeWidth="14" strokeLinecap="round"
-            style={{ filter: `drop-shadow(0 0 8px ${color}66)`, transition: "stroke 0.3s" }}/>
-        )}
-        <text x={cx} y={cy - 6} textAnchor="middle" fill={value !== null ? color : "rgba(255,255,255,0.2)"}
-          style={{ fontSize: 36, fontFamily: "'DM Mono', monospace", fontWeight: 500 }}>
-          {analyzing ? "…" : (value !== null ? displayed : "—")}
-        </text>
-        <text x={cx} y={cy + 16} textAnchor="middle" fill="rgba(255,255,255,0.35)"
-          style={{ fontSize: 11, fontFamily: "'Instrument Sans', sans-serif", letterSpacing: 1 }}>
-          {severity(value !== null ? displayed : null)}
-        </text>
-      </svg>
-      <div style={{ marginTop: 6, textAlign: "center" }}>
-        <div style={{
-          fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.88)",
-          letterSpacing: 0.5, textTransform: "uppercase",
-        }}>{label}</div>
-        <div style={{
-          fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: 4,
-          lineHeight: 1.35, maxWidth: 170,
-        }}>{subtitle}</div>
-      </div>
-    </div>
-  );
-}
-
-// ── App ──────────────────────────────────────────────────────────
-function Prattlemeter() {
-  const [file, setFile] = useState(null);
-  const [scores, setScores] = useState(null);
-  const [analyzing, setAnalyzing] = useState(false);
-  const [error, setError] = useState(null);
-  const [authorAge, setAuthorAge] = useState(16);
-  const [essayTitle, setEssayTitle] = useState("");
-  const [extractedText, setExtractedText] = useState("");
-  const [awaitingConfirm, setAwaitingConfirm] = useState(false);
-  const inputRef = useRef();
-
-  const extractText = useCallback(async (arrayBuffer) => {
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    let text = "";
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      text += content.items.map(it => it.str).join(" ") + "\n";
-    }
-    return text.trim();
-  }, []);
-
-  const handleFile = async (e) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    setFile(f);
-    setScores(null);
-    setError(null);
-
-    try {
-      const buf = await f.arrayBuffer();
-      const text = await extractText(buf);
-      if (text.length < 40) throw new Error("Couldn't extract enough text from this PDF.");
-      setExtractedText(text);
-
-      // Guess title: first non-empty line that looks like a title
-      const lines = text.split(/\n/).map(l => l.trim()).filter(l => l.length > 5);
-      if (lines.length && !essayTitle) {
-        // Heuristic: first line, or first line containing a question mark
-        const questionLine = lines.slice(0, 5).find(l => l.includes("?"));
-        const guess = questionLine || lines[0];
-        // Only use if it's reasonably short (title-like)
-        if (guess.length < 200) setEssayTitle(guess);
-      }
-      setAwaitingConfirm(true);
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
-    }
-  };
-
-  const runAnalysis = async () => {
-    setAwaitingConfirm(false);
-    setAnalyzing(true);
-    setError(null);
-
-    try {
-      const truncated = extractedText.slice(0, 6000);
-
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": (localStorage.getItem("prattlemeter_api_key") || "").trim(),
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 2000,
-          messages: [{
-            role: "user",
-            content: `You are an essay diagnostic tool. Analyse the essay below on four axes, calibrated to the author's age and the essay title/question.
-
-AUTHOR AGE: ${authorAge}
-ESSAY TITLE: ${essayTitle || "(not provided)"}
-
-CALIBRATION RULES:
-- OVERSTRETCH must be judged relative to what is age-appropriate. A 16-year-old referencing Foucault without understanding is overstretch; a 25-year-old doing the same may not be. Technical vocabulary that is standard for the stated age group is NOT overstretch. Only flag material that is clearly beyond what the author can sustain.
-- OBLIQUENESS must be judged against the essay title. If the title demands technical engagement, then technical language is on-topic, not oblique. Score obliqueness based on whether the author is answering the actual question asked.
-- PRATTLE and VERBIAGE are age-independent — padding is padding at any age — but be slightly more lenient with younger writers who may still be developing style.
-
-AXES:
-1. PRATTLE — empty rhetorical padding that says nothing substantive ("Since the dawn of time…", vague truisms, circular restatements).
-2. VERBIAGE — filler words and bloated phrasing that could be cut or tightened without losing meaning (unnecessary adverbs, redundant clauses, throat-clearing).
-3. OBLIQUENESS — failure to address the essay title/question directly; tangential material, evasive hedging, answering a different question than was asked.
-4. OVERSTRETCH — references to concepts, theorists, or technical material that the author clearly doesn't understand FOR THEIR AGE; name-dropping without substance; misused terminology.
-
-For each axis, return a score from 0 (none) to 100 (extreme), a 1-sentence summary, and up to 3 short verbatim quotes (max ~15 words each) from the essay. If a category scores below 15, return fewer or zero quotes.
-
-HOT SEAT — select 1 to 3 of the most problematic paragraphs from the essay. Use this logic:
-- If the essay has long paragraphs (5+ sentences each), select 1 paragraph.
-- If the essay has short paragraphs (1–3 sentences each), select up to 3 paragraphs.
-- Aim for roughly 10 flagged sentences total across all selected paragraphs. These are the sentences the author would most struggle to defend under questioning.
-Return each paragraph verbatim in the "hot_seat" array. For each paragraph object, include "paragraph" (the verbatim text) and "flags" (array of objects with "text" — the exact sentence, verbatim — and "reason" — one of: "prattle", "verbiage", "obliqueness", "overstretch"). Only flag genuinely problematic sentences, but aim for ~10 total flags across all paragraphs.
-
-Respond ONLY with a JSON object (no markdown, no backticks):
-{"prattle":{"score":N,"note":"...","quotes":["...","..."]},"verbiage":{"score":N,"note":"...","quotes":["...","..."]},"obliqueness":{"score":N,"note":"...","quotes":["...","..."]},"overstretch":{"score":N,"note":"...","quotes":["...","..."]},"hot_seat":[{"paragraph":"...","flags":[{"text":"...","reason":"..."}]}]}
-
-ESSAY:
-${truncated}`
-          }],
-        }),
+  // ── MULTIPLE CHOICE ──
+  function checkMC(el, groupId, isCorrect, revealId) {
+    const group = document.getElementById(groupId);
+    if (group.classList.contains('locked')) return;
+    group.classList.add('locked');
+    group.querySelectorAll('.mc-option').forEach(o => o.classList.add('locked'));
+    el.classList.add(isCorrect ? 'correct' : 'wrong');
+    // Highlight the correct answer if student was wrong
+    if (!isCorrect) {
+      group.querySelectorAll('.mc-option').forEach(o => {
+        // The correct option has its onclick with true — we mark it
+        const fn = o.getAttribute('onclick');
+        if (fn && fn.includes(',true,')) o.classList.add('show-correct');
       });
-
-      if (!res.ok) {
-        const errBody = await res.text();
-        throw new Error(`API ${res.status}: ${errBody.slice(0, 300)}`);
-      }
-
-      const data = await res.json();
-      const raw = data.content?.map(b => b.text || "").join("") || "";
-      const cleaned = raw.replace(/```json|```/g, "").trim();
-      const parsed = JSON.parse(cleaned);
-      setScores(parsed);
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
-    } finally {
-      setAnalyzing(false);
     }
-  };
-
-  const reset = () => {
-    setFile(null); setScores(null); setError(null); setAnalyzing(false);
-    setEssayTitle(""); setExtractedText(""); setAwaitingConfirm(false);
-    if (inputRef.current) inputRef.current.value = "";
-  };
-
-  function overallVerdict() {
-    if (!scores) return null;
-    const avg = (scores.prattle.score + scores.verbiage.score + scores.obliqueness.score + scores.overstretch.score) / 4;
-    if (avg < 20) return { text: "Clean writing.", emoji: "✦" };
-    if (avg < 40) return { text: "Some padding — tighten up.", emoji: "◈" };
-    if (avg < 60) return { text: "Significant waffle detected.", emoji: "◉" };
-    return { text: "This essay is mostly hot air.", emoji: "⬥" };
+    if (revealId) {
+      const rev = document.getElementById(revealId);
+      if (rev) { rev.classList.add('show'); MathJax.typesetPromise([rev]); }
+    }
+    if (isCorrect) score++;
+    answered++;
+    updateProgress();
   }
-  const verdict = overallVerdict();
 
-  // ── API Key management ───────────────────────────────────────
-  const [showKeyModal, setShowKeyModal] = useState(false);
-  const [keyInput, setKeyInput] = useState("");
-  const hasKey = !!localStorage.getItem("prattlemeter_api_key");
+  // ── SHORT ANSWER — NUMERIC ──
+  function checkNumeric(inputId, fbId, revealId, target, tol, btnId) {
+    const input = document.getElementById(inputId);
+    const fb = document.getElementById(fbId);
+    const reveal = document.getElementById(revealId);
+    const btn = document.getElementById(btnId);
+    const val = parseFloat(input.value.replace(',',''));
+    if (isNaN(val)) { fb.className='feedback-msg err'; fb.textContent='Please enter a number.'; return; }
+    btn.disabled = true; input.disabled = true;
+    reveal.classList.add('show');
+    answered++;
+    if (Math.abs(val - target) <= tol) {
+      fb.className = 'feedback-msg ok'; fb.textContent = '✓ Correct!'; score++;
+    } else {
+      fb.className = 'feedback-msg err'; fb.textContent = '✗ Not quite — see the worked answer below.';
+    }
+    updateProgress();
+    MathJax.typesetPromise([reveal]);
+  }
 
-  const saveKey = () => {
-    localStorage.setItem("prattlemeter_api_key", keyInput.trim());
-    setShowKeyModal(false);
-    setKeyInput("");
-  };
+  // ── SHORT ANSWER — SCIENTIFIC NOTATION ──
+  function checkSci(inputId, fbId, revealId, target, fracTol, btnId) {
+    const input = document.getElementById(inputId);
+    const fb = document.getElementById(fbId);
+    const reveal = document.getElementById(revealId);
+    const btn = document.getElementById(btnId);
+    const val = parseFloat(input.value.replace(/[xX×]/g,'e').replace('E','e'));
+    if (isNaN(val)) { fb.className='feedback-msg err'; fb.textContent='Enter a number (e.g. 6.02e22).'; return; }
+    btn.disabled = true; input.disabled = true;
+    reveal.classList.add('show');
+    answered++;
+    const relErr = Math.abs((val - target)/target);
+    if (relErr <= fracTol) {
+      fb.className = 'feedback-msg ok'; fb.textContent = '✓ Correct!'; score++;
+    } else {
+      fb.className = 'feedback-msg err'; fb.textContent = '✗ Check your calculation — see the worked answer below.';
+    }
+    updateProgress();
+    MathJax.typesetPromise([reveal]);
+  }
 
-  return (
-    <div style={{
-      width: "100%", maxWidth: 960,
-      display: "flex", flexDirection: "column", alignItems: "center",
-    }}>
-      {/* Key button */}
-      <div style={{ position: "fixed", top: 16, right: 20, zIndex: 10 }}>
-        <button onClick={() => setShowKeyModal(true)} style={{
-          background: hasKey ? "rgba(34,197,94,0.1)" : "rgba(217,160,40,0.15)",
-          border: `1px solid ${hasKey ? "rgba(34,197,94,0.25)" : "rgba(217,160,40,0.3)"}`,
-          borderRadius: 10, padding: "8px 14px",
-          color: hasKey ? "rgba(34,197,94,0.7)" : "rgba(217,160,40,0.8)",
-          fontSize: 12, fontFamily: "'DM Mono', monospace",
-          cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
-        }}>
-          🔑 {hasKey ? "Key set" : "Set API key"}
-        </button>
-      </div>
+  // ── OPEN QUESTION SUBMIT ──
+  function submitOpen() {
+    const btn = document.getElementById('q8-submit');
+    const text = document.getElementById('q8-text').value.trim();
+    if (!text) { return; }
+    btn.disabled = true;
+    document.getElementById('q8-text').disabled = true;
+    const model = document.getElementById('q8-model');
+    model.classList.add('show');
+    answered++;
+    score++; // credit for attempting
+    updateProgress();
+    MathJax.typesetPromise([model]);
+  }
 
-      {/* Key modal */}
-      {showKeyModal && (
-        <div style={{
-          position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
-          display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20,
-        }} onClick={() => setShowKeyModal(false)}>
-          <div onClick={e => e.stopPropagation()} style={{
-            background: "#181b24", border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 16, padding: "28px 32px", width: 420, maxWidth: "90vw",
-          }}>
-            <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Anthropic API Key</div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", marginBottom: 18, lineHeight: 1.5 }}>
-              Stored in your browser's localStorage only. Never sent anywhere except api.anthropic.com.
-            </div>
-            <input
-              type="password"
-              placeholder="sk-ant-..."
-              value={keyInput}
-              onChange={e => setKeyInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && saveKey()}
-              style={{
-                width: "100%", padding: "10px 14px", borderRadius: 10,
-                background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                color: "#fff", fontSize: 14, fontFamily: "'DM Mono', monospace",
-                outline: "none",
-              }}
-            />
-            <div style={{ display: "flex", gap: 10, marginTop: 16, justifyContent: "flex-end" }}>
-              <button onClick={() => setShowKeyModal(false)} style={{
-                background: "transparent", border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: 8, padding: "8px 18px", color: "rgba(255,255,255,0.4)",
-                fontSize: 13, cursor: "pointer", fontFamily: "'Instrument Sans', sans-serif",
-              }}>Cancel</button>
-              <button onClick={saveKey} style={{
-                background: "rgba(168,152,128,0.2)", border: "1px solid rgba(168,152,128,0.3)",
-                borderRadius: 8, padding: "8px 18px", color: "#a89880",
-                fontSize: 13, cursor: "pointer", fontWeight: 600, fontFamily: "'Instrument Sans', sans-serif",
-              }}>Save</button>
-            </div>
-          </div>
-        </div>
-      )}
+  // ── PROGRESS ──
+  function updateProgress() {
+    const pct = Math.min(100, Math.round((answered / totalQ) * 100));
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label').textContent = `${answered} / ${totalQ} questions answered`;
+    document.getElementById('score-val').textContent = `${score} / ${totalQ}`;
+  }
 
-      {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: 40 }}>
-        <h1 style={{
-          fontSize: 42, fontWeight: 700, margin: 0, letterSpacing: -1,
-          background: "linear-gradient(135deg, #e8e0d4 0%, #a89880 100%)",
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-        }}>PRATTLEMETER</h1>
-        <p style={{
-          color: "rgba(255,255,255,0.3)", fontSize: 13,
-          letterSpacing: 3, textTransform: "uppercase", marginTop: 8,
-        }}>IB Essay Diagnostic</p>
-      </div>
-
-      {/* Setup panel */}
-      {(!file || awaitingConfirm) && !analyzing && !scores && (
-        <div style={{
-          width: 480, maxWidth: "92vw",
-          display: "flex", flexDirection: "column", gap: 18,
-        }}>
-          {/* Essay title */}
-          <div>
-            <label style={{
-              fontSize: 11, fontWeight: 600, textTransform: "uppercase",
-              letterSpacing: 1.2, color: "rgba(255,255,255,0.35)", marginBottom: 7, display: "block",
-            }}>Essay title / question {awaitingConfirm && essayTitle ? <span style={{ color: "rgba(168,152,128,0.5)", fontWeight: 400, textTransform: "none", letterSpacing: 0 }}> — auto-detected, edit if wrong</span> : ""}</label>
-            <input
-              type="text"
-              placeholder="e.g. To what extent does language shape our understanding of reality?"
-              value={essayTitle}
-              onChange={e => setEssayTitle(e.target.value)}
-              style={{
-                width: "100%", padding: "11px 14px", borderRadius: 10,
-                background: awaitingConfirm && essayTitle ? "rgba(168,152,128,0.08)" : "rgba(255,255,255,0.05)",
-                border: awaitingConfirm && essayTitle ? "1px solid rgba(168,152,128,0.25)" : "1px solid rgba(255,255,255,0.1)",
-                color: "#fff", fontSize: 14, fontFamily: "'Instrument Sans', sans-serif",
-                outline: "none", transition: "border-color 0.2s",
-              }}
-              onFocus={e => e.currentTarget.style.borderColor = "rgba(168,152,128,0.4)"}
-              onBlur={e => e.currentTarget.style.borderColor = awaitingConfirm ? "rgba(168,152,128,0.25)" : "rgba(255,255,255,0.1)"}
-            />
-          </div>
-
-          {/* Age selector */}
-          <div>
-            <label style={{
-              fontSize: 11, fontWeight: 600, textTransform: "uppercase",
-              letterSpacing: 1.2, color: "rgba(255,255,255,0.35)", marginBottom: 7, display: "block",
-            }}>Author's age</label>
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <select
-                value={authorAge}
-                onChange={e => setAuthorAge(Number(e.target.value))}
-                style={{
-                  padding: "10px 14px", borderRadius: 10,
-                  background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-                  color: "#fff", fontSize: 14, fontFamily: "'DM Mono', monospace",
-                  outline: "none", cursor: "pointer", appearance: "none",
-                  WebkitAppearance: "none", width: 80, textAlign: "center",
-                }}
-              >
-                {Array.from({ length: 58 }, (_, i) => i + 11).map(age => (
-                  <option key={age} value={age} style={{ background: "#181b24" }}>{age}</option>
-                ))}
-              </select>
-              <span style={{
-                fontSize: 12, color: "rgba(255,255,255,0.3)",
-                fontFamily: "'DM Mono', monospace",
-              }}>
-                {authorAge <= 13 ? "KS3 / MYP" : authorAge <= 16 ? "GCSE / MYP" : authorAge <= 18 ? "IB Diploma / A-Level" : authorAge <= 22 ? "Undergraduate" : authorAge <= 30 ? "Postgraduate" : "Professional / Academic"}
-              </span>
-            </div>
-          </div>
-
-          {/* Upload or Confirm */}
-          {!awaitingConfirm ? (
-            <label style={{
-              display: "flex", flexDirection: "column", alignItems: "center",
-              justifyContent: "center",
-              width: "100%", height: 150,
-              border: "2px dashed rgba(255,255,255,0.12)",
-              borderRadius: 16, cursor: "pointer",
-              transition: "border-color 0.3s, background 0.3s",
-              background: "rgba(255,255,255,0.02)",
-              marginTop: 4,
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(168,152,128,0.4)"; e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; }}
-            >
-              <div style={{ fontSize: 28, marginBottom: 8, opacity: 0.4 }}>⬆</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>Upload Essay PDF</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginTop: 5 }}>text will be extracted and analysed</div>
-              <input ref={inputRef} type="file" accept=".pdf" onChange={handleFile} style={{ display: "none" }}/>
-            </label>
-          ) : (
-            <div style={{ display: "flex", gap: 12, marginTop: 4 }}>
-              <button onClick={reset} style={{
-                flex: 1, padding: "12px 20px", borderRadius: 10,
-                background: "transparent", border: "1px solid rgba(255,255,255,0.1)",
-                color: "rgba(255,255,255,0.4)", fontSize: 13, cursor: "pointer",
-                fontFamily: "'Instrument Sans', sans-serif", fontWeight: 600,
-              }}>Cancel</button>
-              <button onClick={runAnalysis} style={{
-                flex: 2, padding: "12px 20px", borderRadius: 10,
-                background: "rgba(168,152,128,0.2)", border: "1px solid rgba(168,152,128,0.35)",
-                color: "#a89880", fontSize: 14, cursor: "pointer",
-                fontFamily: "'Instrument Sans', sans-serif", fontWeight: 700,
-                letterSpacing: 0.5, transition: "all 0.2s",
-              }}
-                onMouseEnter={e => { e.currentTarget.style.background = "rgba(168,152,128,0.3)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "rgba(168,152,128,0.2)"; }}
-              >Analyse Essay</button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Spinner */}
-      {analyzing && (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, marginTop: 20 }}>
-          <div style={{
-            width: 36, height: 36, border: "3px solid rgba(168,152,128,0.2)",
-            borderTopColor: "#a89880", borderRadius: "50%",
-            animation: "spin 0.8s linear infinite",
-          }}/>
-          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, letterSpacing: 1 }}>READING THE WAFFLE…</div>
-        </div>
-      )}
-
-      {/* Error */}
-      {error && (
-        <div style={{
-          marginTop: 20, padding: "16px 24px", borderRadius: 12,
-          background: "rgba(207,40,40,0.1)", border: "1px solid rgba(207,40,40,0.25)",
-          color: "#cf5050", fontSize: 13, maxWidth: 500, textAlign: "center",
-        }}>{error}</div>
-      )}
-
-      {/* Gauges */}
-      {(scores || analyzing) && (
-        <div style={{ width: "100%", marginTop: 36 }}>
-          {/* Context banner */}
-          <div style={{
-            display: "flex", flexWrap: "wrap", gap: "8px 20px",
-            justifyContent: "center", marginBottom: 24,
-          }}>
-            {essayTitle && (
-              <div style={{
-                fontSize: 13, color: "rgba(255,255,255,0.45)",
-                fontFamily: "'DM Mono', monospace", fontStyle: "italic",
-                maxWidth: 600, textAlign: "center",
-              }}>"{essayTitle}"</div>
-            )}
-            <div style={{
-              fontSize: 12, color: "rgba(168,152,128,0.5)",
-              fontFamily: "'DM Mono', monospace",
-              padding: "2px 10px",
-              background: "rgba(168,152,128,0.08)",
-              borderRadius: 6,
-            }}>age {authorAge}</div>
-          </div>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 20, width: "100%",
-        }}>
-          <Gauge label="Prattle" subtitle="Empty rhetorical padding" value={scores?.prattle?.score ?? null} analyzing={analyzing}/>
-          <Gauge label="Verbiage" subtitle="Filler words & bloat" value={scores?.verbiage?.score ?? null} analyzing={analyzing}/>
-          <Gauge label="Obliqueness" subtitle="Dodging the question" value={scores?.obliqueness?.score ?? null} analyzing={analyzing}/>
-          <Gauge label="Overstretch" subtitle="Beyond the author's grasp" value={scores?.overstretch?.score ?? null} analyzing={analyzing}/>
-        </div>
-        </div>
-      )}
-
-      {/* Verdict + Notes */}
-      {scores && (
-        <div style={{ marginTop: 32, width: "100%", animation: "fadeIn 0.6s ease-out" }}>
-          {verdict && (
-            <div style={{
-              textAlign: "center", marginBottom: 28,
-              fontSize: 16, fontWeight: 600, color: "rgba(255,255,255,0.6)", letterSpacing: 0.5,
-            }}>
-              <span style={{ marginRight: 8, opacity: 0.5 }}>{verdict.emoji}</span>{verdict.text}
-            </div>
-          )}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-            {["prattle","verbiage","obliqueness","overstretch"].map(key => {
-              const d = scores[key];
-              const quotes = d?.quotes || [];
-              return (
-                <div key={key} style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  borderRadius: 12, padding: "14px 18px",
-                }}>
-                  <div style={{
-                    fontSize: 11, fontWeight: 600, textTransform: "uppercase",
-                    letterSpacing: 1, color: "rgba(255,255,255,0.35)", marginBottom: 6,
-                  }}>{key}</div>
-                  <div style={{
-                    fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.5,
-                    fontFamily: "'DM Mono', monospace", marginBottom: quotes.length ? 10 : 0,
-                  }}>{d?.note}</div>
-                  {quotes.length > 0 && (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                      {quotes.map((q, i) => (
-                        <div key={i} style={{
-                          fontSize: 12, lineHeight: 1.45,
-                          color: "rgba(255,255,255,0.4)",
-                          fontFamily: "'DM Mono', monospace",
-                          fontStyle: "italic",
-                          padding: "6px 10px",
-                          background: "rgba(255,255,255,0.025)",
-                          borderLeft: "2px solid rgba(168,152,128,0.3)",
-                          borderRadius: "0 6px 6px 0",
-                        }}>"{q}"</div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Hot Seat */}
-          {(scores.hot_seat || scores.hot_seat_paragraph) && (() => {
-            // Normalise: support old single-paragraph format and new array format
-            let hotSeats = scores.hot_seat || [];
-            if (!hotSeats.length && scores.hot_seat_paragraph) {
-              hotSeats = [{ paragraph: scores.hot_seat_paragraph, flags: scores.flagged_sentences || [] }];
-            }
-            const totalFlags = hotSeats.reduce((n, hs) => n + (hs.flags?.length || 0), 0);
-
-            const reasonColors = {
-              prattle: { bg: "rgba(217,160,40,0.15)", border: "rgba(217,160,40,0.4)", label: "#d9a028" },
-              verbiage: { bg: "rgba(180,130,200,0.15)", border: "rgba(180,130,200,0.4)", label: "#b482c8" },
-              obliqueness: { bg: "rgba(80,160,220,0.15)", border: "rgba(80,160,220,0.4)", label: "#50a0dc" },
-              overstretch: { bg: "rgba(207,70,70,0.15)", border: "rgba(207,70,70,0.4)", label: "#cf4646" },
-            };
-
-            function renderParagraph(para, flags) {
-              if (!flags?.length) return para;
-              let remaining = para;
-              const segments = [];
-              const sortedFlags = [...flags].sort((a, b) => para.indexOf(a.text) - para.indexOf(b.text));
-              for (const flag of sortedFlags) {
-                const idx = remaining.indexOf(flag.text);
-                if (idx === -1) continue;
-                if (idx > 0) segments.push({ type: "plain", text: remaining.slice(0, idx) });
-                segments.push({ type: "flagged", text: flag.text, reason: flag.reason?.toLowerCase() });
-                remaining = remaining.slice(idx + flag.text.length);
-              }
-              if (remaining) segments.push({ type: "plain", text: remaining });
-
-              return segments.map((seg, i) => {
-                if (seg.type === "plain") return <span key={i}>{seg.text}</span>;
-                const c = reasonColors[seg.reason] || reasonColors.prattle;
-                return (
-                  <span key={i}>
-                    <span style={{
-                      background: c.bg,
-                      borderBottom: `2px solid ${c.border}`,
-                      borderRadius: 3,
-                      padding: "1px 2px",
-                    }}>{seg.text}</span>
-                    <span style={{
-                      fontSize: 9, fontWeight: 700, textTransform: "uppercase",
-                      letterSpacing: 0.8, color: c.label,
-                      marginLeft: 4, verticalAlign: "super",
-                    }}>{seg.reason}</span>
-                  </span>
-                );
-              });
-            }
-
-            return (
-              <div style={{
-                marginTop: 28, padding: "22px 24px",
-                background: "rgba(255,255,255,0.025)",
-                border: "1px solid rgba(168,152,128,0.15)",
-                borderRadius: 14,
-              }}>
-                <div style={{
-                  display: "flex", alignItems: "baseline", gap: 12, marginBottom: 4,
-                }}>
-                  <div style={{
-                    fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-                    letterSpacing: 2, color: "rgba(168,152,128,0.6)",
-                  }}>🪑 Hot Seat</div>
-                  <div style={{
-                    fontSize: 11, color: "rgba(168,152,128,0.4)",
-                    fontFamily: "'DM Mono', monospace",
-                  }}>{totalFlags} sentence{totalFlags !== 1 ? "s" : ""} to defend</div>
-                </div>
-                <div style={{
-                  fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 20,
-                  fontStyle: "italic",
-                }}>Defend these under questioning. Highlighted sentences are the ones you'll need to justify.</div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                  {hotSeats.map((hs, pi) => (
-                    <div key={pi} style={{
-                      fontSize: 14, lineHeight: 1.75, color: "rgba(255,255,255,0.6)",
-                      fontFamily: "'Instrument Sans', sans-serif",
-                      paddingLeft: hotSeats.length > 1 ? 16 : 0,
-                      borderLeft: hotSeats.length > 1 ? "2px solid rgba(168,152,128,0.12)" : "none",
-                    }}>
-                      {hotSeats.length > 1 && (
-                        <div style={{
-                          fontSize: 10, fontWeight: 600, textTransform: "uppercase",
-                          letterSpacing: 1.5, color: "rgba(168,152,128,0.35)", marginBottom: 8,
-                        }}>Paragraph {pi + 1}</div>
-                      )}
-                      {renderParagraph(hs.paragraph, hs.flags)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
-
-          <div style={{ textAlign: "center", marginTop: 32 }}>
-            <button onClick={reset} style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: 10, padding: "10px 28px",
-              color: "rgba(255,255,255,0.5)", fontSize: 13,
-              fontFamily: "'Instrument Sans', sans-serif",
-              cursor: "pointer", fontWeight: 600, letterSpacing: 0.5,
-              transition: "all 0.2s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "rgba(255,255,255,0.8)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.5)"; }}
-            >Analyse Another</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("root")).render(<Prattlemeter/>);
+  // ── RESET ──
+  function resetAll() {
+    if (!confirm('Reset all answers and scores?')) return;
+    score = 0; answered = 0;
+    document.querySelectorAll('.mc-options').forEach(g => {
+      g.classList.remove('locked');
+      g.querySelectorAll('.mc-option').forEach(o => o.classList.remove('correct','wrong','locked','show-correct'));
+    });
+    document.querySelectorAll('.mc-reveal').forEach(el => el.classList.remove('show'));
+    ['q1-in','q2-in','q4-in','q6-in'].forEach(id => {
+      const el = document.getElementById(id); if (el) { el.value = ''; el.disabled = false; }
+    });
+    ['q1-fb','q2-fb','q4-fb','q6-fb'].forEach(id => {
+      const el = document.getElementById(id); if (el) { el.textContent = ''; el.className = 'feedback-msg'; }
+    });
+    ['q1-ans','q2-ans','q4-ans','q6-ans'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.classList.remove('show');
+    });
+    ['q1-btn','q2-btn','q4-btn','q6-btn'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.disabled = false;
+    });
+    const q8text = document.getElementById('q8-text');
+    const q8btn = document.getElementById('q8-submit');
+    if (q8text) { q8text.value = ''; q8text.disabled = false; }
+    if (q8btn) q8btn.disabled = false;
+    document.getElementById('q8-model').classList.remove('show');
+    if (!teacherMode) document.getElementById('q8-mark').classList.remove('show');
+    updateProgress();
+  }
 </script>
 </body>
 </html>
